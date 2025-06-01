@@ -13,33 +13,49 @@ import Pengguna.User;
 public class main {
     Scanner input = new Scanner(System.in);
     ArrayList<User> users = new ArrayList<>();
+    int noRole;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         main p = new main();
+        int noRole;
         p.runThis();
     }
     
     public void runThis(){
         users.add(new User("Fadhil", "fadhil123", "pass1", 1));
-        users.add(new User("Ahnaf", "ahnaf456", "pass2", 1);
         users.add(new User("Rani", "rani789", "pass3", 2));
-        users.add(new User("Budi", "budi321", "pass4", 1));
-        users.add(new User("Sinta", "sinta654", "pass5", 2));
+        users.add(new User("Budi", "budi321", "pass4", 3));
+        users.add(new User("Sinta", "sinta654", "pass5", 4));
         
-        Login();
+        /*
+            rolo 1 = admin
+            role 2 = siswa
+            role 3 = guru
+            role 4 = instansi
+        */
+        
         if(!Login()){
             runThis();
         }
         
-        
+        if(this.noRole == 1){
+            menuAdmin();
+        } else if(this.noRole == 2){
+            menuSiswa();
+        } else if (this.noRole == 3){
+            menuGuru();
+        } else{
+            menuInstansi();
+        }
     }
     
     public boolean validisai(String username, String password){
         for (User i : users) {
             if (i.getUsename().equals(username) && i.getPassword().equals(password)) {
                 System.out.println("Login berhasil! Selamat datang, " + i.getNama());
+                noRole = i.getRole();
                 return true;
             }
         }
@@ -53,5 +69,21 @@ public class main {
         System.out.println("Masukkan password anda: ");
         String pass = input.nextLine();
         return validisai(username, pass);
+    }
+    
+    public void menuAdmin(){
+        
+    }
+    
+    public void menuSiswa(){
+        
+    }
+    
+    public void menuGuru(){
+        
+    }
+    
+    public void menuInstansi(){
+        
     }
 }
