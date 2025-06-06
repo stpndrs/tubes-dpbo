@@ -41,6 +41,10 @@ public class Siswa{
         return nisn;
     }
 
+    public void setNisn(String nisn) {
+        this.nisn = nisn;
+    }
+
     public String getAlamat() {
         return alamat;
     }

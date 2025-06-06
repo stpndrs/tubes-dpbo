@@ -53,6 +53,10 @@ public class Instansi {
         this.telpon = telpon;
     }
 
+    public String getTelpon() {
+        return telpon;
+    }
+
     public int getKouta() {
         return kouta;
     }

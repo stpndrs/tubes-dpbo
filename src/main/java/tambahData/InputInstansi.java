@@ -1,0 +1,20 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package tambahData;
+
+import MissionUtil.Util;
+import Pengguna.Instansi;
+
+public class InputInstansi {
+    public static Instansi inputDataInstansi() {
+        String nama = Util.inputString("Nama Instansi: ");
+        String alamat = Util.inputString("Alamat: ");
+        String telpon = Util.inputString("Telpon: ");
+        int kouta = Util.inputInt("Kouta: ");
+
+        // user_id bisa diset null dulu karena belum digunakan
+        return new Instansi(kouta, nama, alamat, telpon, null);
+    }
+}
