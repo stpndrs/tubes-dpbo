@@ -71,25 +71,50 @@ public class TambahPresensi {
     }
 
     private void masukkanData(Monitoring monitoring, String tanggal, String jamMasuk, String keterangan, int status) {
-        String query = "INSERT INTO presensi (monitring_id, tanggal, jam_masuk, keterangan, status) VALUES (?, ?, ?, ?, ?)";
+    String queryPresensi = "INSERT INTO presensi (monitring_id, tanggal, jam_masuk, keterangan, status) VALUES (?, ?, ?, ?, ?)";
+    String queryCekWaktuDimulai = "SELECT waktu_dimulai FROM monitoring WHERE id = ?";
+    String querySetWaktuDimulai = "UPDATE monitoring SET waktu_dimulai = ? WHERE id = ?";
 
-        try {
-            PreparedStatement stmt = Connection.bukaKoneksi().prepareStatement(query);
-            stmt.setInt(1, monitoring.getId());
-            stmt.setString(2, tanggal);
-            stmt.setString(3, jamMasuk);
-            stmt.setString(4, keterangan);
-            stmt.setInt(5, status);
+    try {
+        // 1. Insert presensi
+        PreparedStatement stmtPresensi = Connection.bukaKoneksi().prepareStatement(queryPresensi);
+        stmtPresensi.setInt(1, monitoring.getId());
+        stmtPresensi.setString(2, tanggal);
+        stmtPresensi.setString(3, jamMasuk);
+        stmtPresensi.setString(4, keterangan);
+        stmtPresensi.setInt(5, status);
 
-            int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("Presensi berhasil disimpan ke database.");
+        int rowsInserted = stmtPresensi.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("Presensi berhasil disimpan ke database.");
+
+            // 2. Cek apakah waktu_dimulai masih NULL
+            PreparedStatement stmtCek = Connection.bukaKoneksi().prepareStatement(queryCekWaktuDimulai);
+            stmtCek.setInt(1, monitoring.getId());
+            var rs = stmtCek.executeQuery();
+
+            if (rs.next()) {
+                java.sql.Timestamp waktuDimulai = rs.getTimestamp("waktu_dimulai");
+                if (waktuDimulai == null) {
+                    // 3. Set waktu_dimulai hanya dengan tanggal (tanpa jam)
+                    PreparedStatement stmtUpdate = Connection.bukaKoneksi().prepareStatement(querySetWaktuDimulai);
+                    stmtUpdate.setString(1, tanggal); // asumsikan format: "yyyy-MM-dd"
+                    stmtUpdate.setInt(2, monitoring.getId());
+                    stmtUpdate.executeUpdate();
+                    stmtUpdate.close();
+
+                    System.out.println("waktu_dimulai berhasil diset ke: " + tanggal);
+                }
             }
 
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println("Gagal menyimpan presensi: " + e.getMessage());
+            rs.close();
+            stmtCek.close();
         }
+
+        stmtPresensi.close();
+    } catch (SQLException e) {
+        System.err.println("Gagal menyimpan presensi atau mengatur waktu_dimulai: " + e.getMessage());
     }
+}
 }
 

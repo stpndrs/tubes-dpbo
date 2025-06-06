@@ -23,6 +23,9 @@ public class Monitoring {
         this.instansi_id = instansi_id;
         this.guru_id = guru_id;
     }
+    
+    public Monitoring(){
+    }
 
     public int getId() {
         return id;
