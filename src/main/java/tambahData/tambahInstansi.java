@@ -6,10 +6,10 @@ package tambahData;
 
 import Pengguna.Instansi;
 import com.mycompany.testdbpkl.Connection;
-
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-public class tambahInstansi {
+public class tambahInstansi{
     public static void simpanInstansi(Instansi instansi) {
         String query = "INSERT INTO instansi (nama, alamat, telpon, kouta) VALUES (?, ?, ?, ?)";
 
@@ -22,7 +22,7 @@ public class tambahInstansi {
 
             int rows = stmt.executeUpdate();
             if (rows > 0) {
-                System.out.println("Data instansi berhasil ditambahkan.");
+                System.out.println("Data instansi berhasil ditambahkan. ");
             } else {
                 System.out.println("Gagal menambahkan data instansi.");
             }

@@ -10,7 +10,7 @@ import data_presensi.TambahPresensi;
 import tambahData.InputInstansi;
 import tambahData.InputSiswa;
 import tambahData.TambahSiswa;
-import tambahData.TambahInstansi;
+import tambahData.tambahInstansi;
 
 public class TestDbPkl {
 
