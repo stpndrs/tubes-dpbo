@@ -96,7 +96,7 @@ public class TambahPresensi {
             if (rs.next()) {
                 java.sql.Timestamp waktuDimulai = rs.getTimestamp("waktu_dimulai");
                 if (waktuDimulai == null) {
-                    // 3. Set waktu_dimulai hanya dengan tanggal (tanpa jam)
+                    // 3. Set waktu_dimulai hanya dengan tanggal
                     PreparedStatement stmtUpdate = Connection.bukaKoneksi().prepareStatement(querySetWaktuDimulai);
                     stmtUpdate.setString(1, tanggal); // asumsikan format: "yyyy-MM-dd"
                     stmtUpdate.setInt(2, monitoring.getId());
