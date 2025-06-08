@@ -26,7 +26,7 @@ public class Monitoring {
     
     public Monitoring(){
     }
-
+    
     public int getId() {
         return id;
     }

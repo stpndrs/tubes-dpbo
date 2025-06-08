@@ -33,7 +33,8 @@ public class TambahPresensi {
         int status = Util.inputInt("1. Hadir \n 2. Sakit \n 3. izin \n Masukkan status: ");
         String keterangan = Util.inputString("Masukkan keterangan: ");
 
-        masukkanData(monitoring, tanggal, jamMasuk, keterangan, status);
+        //masukkanData(monitoring, tanggal, jamMasuk, keterangan, status);
+        new Presensi(monitoring, tanggal, jamMasuk, keterangan, status);
     }
 
     private Monitoring getMonitoringById(int id) {
@@ -70,19 +71,19 @@ public class TambahPresensi {
         return monitoring;
     }
 
-    private void masukkanData(Monitoring monitoring, String tanggal, String jamMasuk, String keterangan, int status) {
-    String queryPresensi = "INSERT INTO presensi (monitring_id, tanggal, jam_masuk, keterangan, status) VALUES (?, ?, ?, ?, ?)";
+    public static void masukkanDataPresensi(Presensi presensi) {
+    String queryPresensi = "INSERT INTO presensi (monitoring_id, tanggal, jam_masuk, keterangan, status) VALUES (?, ?, ?, ?, ?)";
     String queryCekWaktuDimulai = "SELECT waktu_dimulai FROM monitoring WHERE id = ?";
-    String querySetWaktuDimulai = "UPDATE monitoring SET waktu_dimulai = ? WHERE id = ?";
+    String querySetWaktuDimulai = "UPDATE monitoring SET waktu_dimulai = ?, status = ? WHERE id = ?";
 
     try {
         // 1. Insert presensi
         PreparedStatement stmtPresensi = Connection.bukaKoneksi().prepareStatement(queryPresensi);
-        stmtPresensi.setInt(1, monitoring.getId());
-        stmtPresensi.setString(2, tanggal);
-        stmtPresensi.setString(3, jamMasuk);
-        stmtPresensi.setString(4, keterangan);
-        stmtPresensi.setInt(5, status);
+        stmtPresensi.setInt(1, presensi.getMonitoring_id().getId());
+        stmtPresensi.setString(2, presensi.getTanggal());
+        stmtPresensi.setString(3, presensi.getJam_masuk());
+        stmtPresensi.setString(4, presensi.getKeterangan());
+        stmtPresensi.setInt(5, presensi.getStatus());
 
         int rowsInserted = stmtPresensi.executeUpdate();
         if (rowsInserted > 0) {
@@ -90,20 +91,21 @@ public class TambahPresensi {
 
             // 2. Cek apakah waktu_dimulai masih NULL
             PreparedStatement stmtCek = Connection.bukaKoneksi().prepareStatement(queryCekWaktuDimulai);
-            stmtCek.setInt(1, monitoring.getId());
+            stmtCek.setInt(1, presensi.getMonitoring_id().getId());
             var rs = stmtCek.executeQuery();
 
             if (rs.next()) {
                 java.sql.Timestamp waktuDimulai = rs.getTimestamp("waktu_dimulai");
                 if (waktuDimulai == null) {
-                    // 3. Set waktu_dimulai hanya dengan tanggal
+                    // 3. Set waktu_dimulai dan status
                     PreparedStatement stmtUpdate = Connection.bukaKoneksi().prepareStatement(querySetWaktuDimulai);
-                    stmtUpdate.setString(1, tanggal); // asumsikan format: "yyyy-MM-dd"
-                    stmtUpdate.setInt(2, monitoring.getId());
+                    stmtUpdate.setString(1, presensi.getTanggal()); // asumsi format tanggal "yyyy-MM-dd"
+                    stmtUpdate.setString(2, data_monitoring.statusPengajuan.Status.SEDANG_PELAKSANAAN.name().toLowerCase());
+                    stmtUpdate.setInt(3, presensi.getMonitoring_id().getId());
                     stmtUpdate.executeUpdate();
                     stmtUpdate.close();
 
-                    System.out.println("waktu_dimulai berhasil diset ke: " + tanggal);
+                    System.out.println("waktu_dimulai berhasil diset ke: " + presensi.getTanggal());
                 }
             }
 

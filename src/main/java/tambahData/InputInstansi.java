@@ -14,7 +14,6 @@ public class InputInstansi {
         String telpon = Util.inputString("Telpon: ");
         int kouta = Util.inputInt("Kouta: ");
 
-        // user_id bisa diset null dulu karena belum digunakan
         return new Instansi(kouta, nama, alamat, telpon, null);
     }
 }

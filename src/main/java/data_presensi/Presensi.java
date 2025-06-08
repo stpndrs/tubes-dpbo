@@ -14,11 +14,12 @@ public class Presensi {
     private Monitoring monitoring_id;
     private String tanggal, jam_masuk, jam_keluar, keterangan, lokasi;
 
-    public Presensi(Monitoring monitoring_id ,String tanggal, String jam_masuk, String keterangan) {
+    public Presensi(Monitoring monitoring_id ,String tanggal, String jam_masuk, String keterangan, int status) {
         this.monitoring_id = monitoring_id;
         this.tanggal = tanggal;
         this.jam_masuk = jam_masuk;
         this.keterangan = keterangan;
+        this.status = status;
     }
 
     public int getId() {
