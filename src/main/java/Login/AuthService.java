@@ -14,7 +14,7 @@ public class AuthService {
 
     // Mengembalikan true jika login berhasil
     public static boolean login(String username, String password) {
-        String query = "SELECT hashed_password FROM user WHERE username = ?";
+        String query = "SELECT password FROM user WHERE username = ?";
 
         try {
             PreparedStatement stmt = Connection.bukaKoneksi().prepareStatement(query);
@@ -22,7 +22,9 @@ public class AuthService {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                String hashedPassword = rs.getString("hashed_password");
+                String hashedPassword = rs.getString("password");
+
+                // Cek apakah password cocok
                 if (hashedPassword != null && BCrypt.checkpw(password, hashedPassword)) {
                     return true; // Login berhasil
                 }

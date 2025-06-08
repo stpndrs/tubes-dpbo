@@ -12,9 +12,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UpdatePasswordKeHashPassword {
+
+    // Cek apakah password sudah di-hash dengan BCrypt
+    private static boolean isBCryptHashed(String password) {
+        return password != null && password.startsWith("$2") && password.length() == 60;
+    }
+
     public static void hashSemuaPassword() {
-        String selectQuery = "SELECT id, password, hashed_password FROM user";
-        String updateQuery = "UPDATE user SET hashed_password = ? WHERE id = ?";
+        String selectQuery = "SELECT id, password FROM user";
+        String updateQuery = "UPDATE user SET password = ? WHERE id = ?";
 
         try (var conn = Connection.bukaKoneksi();
              PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
@@ -22,26 +28,26 @@ public class UpdatePasswordKeHashPassword {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
-                String plainPassword = rs.getString("password");
-                String hashedPassword = rs.getString("hashed_password");
+                String password = rs.getString("password");
 
-                if (hashedPassword == null || hashedPassword.isEmpty()) {
-                    String hashed = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+                if (!isBCryptHashed(password)) {
+                    // Password belum di-hash → hash dan simpan kembali
+                    String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
                     try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
                         updateStmt.setString(1, hashed);
                         updateStmt.setInt(2, id);
                         updateStmt.executeUpdate();
 
-                        System.out.println("Hashed password untuk user ID " + id + " berhasil ditambahkan.");
+                        System.out.println("User ID " + id + ": password berhasil di-hash dan diperbarui.");
                     }
                 } else {
-                    System.out.println("User ID " + id + " sudah memiliki hashed password. Lewat.");
+                    System.out.println("User ID " + id + ": password sudah hashed, dilewati.");
                 }
             }
 
         } catch (SQLException e) {
-            System.err.println("Gagal melakukan hashing password: " + e.getMessage());
+            System.err.println("Gagal memproses password: " + e.getMessage());
         }
     }
 }

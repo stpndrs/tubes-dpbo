@@ -12,16 +12,15 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class TambahUser {
     public static void simpanUser(User user) {
-        String query = "INSERT INTO User (nama, username, password, hashed_password, role) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO User (nama, username, password, role) VALUES (?, ?, ?, ?)";
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
         try {
             PreparedStatement stmt = Connection.bukaKoneksi().prepareStatement(query);
             stmt.setString(1, user.getNama());
             stmt.setString(2, user.getUsename());
-            stmt.setString(3, user.getPassword());
-            stmt.setString(4, hashedPassword);
-            stmt.setInt(5, user.getRole());
+            stmt.setString(3, hashedPassword);
+            stmt.setInt(4, user.getRole());
 
             int rows = stmt.executeUpdate();
             if (rows > 0) {
