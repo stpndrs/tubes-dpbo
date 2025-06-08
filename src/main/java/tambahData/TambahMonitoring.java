@@ -11,9 +11,9 @@ import data_monitoring.Monitoring;
 
 public class TambahMonitoring {
 
-    public void tambahMonitoring() {
-        inputMonitoring input = new inputMonitoring();
-        Monitoring monitoring = input.inputDataMonitoring();
+    public void tambahMonitoring(Monitoring monitoring) {
+        //inputMonitoring input = new inputMonitoring();
+        //Monitoring monitoring = input.inputDataMonitoring();
 
         String query = "INSERT INTO monitoring (siswa_id, guru_id) VALUES (?, ?)";
 
