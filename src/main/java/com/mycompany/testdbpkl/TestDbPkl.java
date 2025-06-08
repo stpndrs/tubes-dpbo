@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 package com.mycompany.testdbpkl;
+import Login.UpdatePasswordKeHashPassword;
 import Pengguna.Instansi;
 import Pengguna.Siswa;
 import data_monitoring.UpdateStatusSiswa;
@@ -32,6 +33,18 @@ public class TestDbPkl {
             
             //Instansi instansiBaru = InputInstansi.inputDataInstansi();
             //TambahInstansi.simpanInstansi(instansiBaru);
+            //UpdatePasswordKeHashPassword.hashSemuaPassword();
+            /*
+            String username = MissionUtil.Util.inputString("masukkan username: ");
+            String password = MissionUtil.Util.inputString("masukkan password: ");
+            
+            if(Login.AuthService.login(username, username)){
+                System.out.println("login berhasil");
+            }
+            else{
+                System.out.println("Login gagal");
+            }
+            */
             
         } else {
             System.out.println("Gagal membuka koneksi database.");
