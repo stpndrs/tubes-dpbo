@@ -4,7 +4,8 @@
  */
 package Login;
 
-import com.mycompany.testdbpkl.Connection;
+import DataBase.DBConnection;
+//import com.mycompany.testdbpkl.Connection;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
@@ -22,7 +23,7 @@ public class UpdatePasswordKeHashPassword {
         String selectQuery = "SELECT id, password FROM user";
         String updateQuery = "UPDATE user SET password = ? WHERE id = ?";
 
-        try (var conn = Connection.bukaKoneksi();
+        try (var conn = DBConnection.getConnection();
              PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
              ResultSet rs = selectStmt.executeQuery()) {
 

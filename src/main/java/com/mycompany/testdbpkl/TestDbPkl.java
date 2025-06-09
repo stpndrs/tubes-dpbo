@@ -2,22 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 package com.mycompany.testdbpkl;
+//import Login.UpdatePasswordKeHashPassword;
+//import Model.Instansi;
+
+import Login.AuthService;
+import ViewGUi.LoginView;
 import Login.UpdatePasswordKeHashPassword;
-import Pengguna.Instansi;
-import Pengguna.Siswa;
-import data_monitoring.UpdateStatusSiswa;
-import data_monitoring.UpdateStatusAdmin;
-import data_presensi.TambahPresensi;
-import tambahData.InputInstansi;
-import tambahData.InputSiswa;
-import tambahData.TambahSiswa;
-import tambahData.tambahInstansi;
+
+//import Model.Siswa;
+//import Controller.UpdateStatusSiswa;
+//import Controller.UpdateStatusAdmin;
+//import Controller.TambahPresensi;
+//import View.InputInstansi;
+//import View.InputSiswa;
+//import Controller.TambahSiswa;
+//import Controller.tambahInstansi;
 
 public class TestDbPkl {
 
     public static void main(String[] args) {
         // Coba buka koneksi
-        if (Connection.bukaKoneksi() != null) {
+        if (DataBase.DBConnection.getConnection()!= null) {
             System.out.println("CONNECT");
             
             // Jalankan proses tambah presensi
@@ -45,7 +50,14 @@ public class TestDbPkl {
                 System.out.println("Login gagal");
             }
             */
+            UpdatePasswordKeHashPassword.hashSemuaPassword();
+//            boolean hasil = AuthService.login("admin", "admin");
+//            if(hasil){
+//                System.out.println("Login " + (hasil ? "berhasil" : "gagal"));
+//            }
             
+            new LoginView().setVisible(true);
+           
         } else {
             System.out.println("Gagal membuka koneksi database.");
         }

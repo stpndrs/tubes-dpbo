@@ -4,38 +4,59 @@
  */
 package Login;
 
-import com.mycompany.testdbpkl.Connection;
-import org.mindrot.jbcrypt.BCrypt;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import DataBase.DBConnection;
+import org.mindrot.jbcrypt.BCrypt;
+import Session.Session;
 
 public class AuthService {
 
-    // Mengembalikan true jika login berhasil
     public static boolean login(String username, String password) {
-        String query = "SELECT password FROM user WHERE username = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
-            PreparedStatement stmt = Connection.bukaKoneksi().prepareStatement(query);
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
+            con = (Connection) DBConnection.getConnection(); // Koneksi baru setiap kali login
+            if (con == null) {
+                System.out.println("Koneksi database null");
+                return false;
+            }
+
+            String query = "SELECT * FROM user WHERE username = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, username);
+            rs = ps.executeQuery();
 
             if (rs.next()) {
                 String hashedPassword = rs.getString("password");
+                int idUser = rs.getInt("id");
+                int role = rs.getInt("role");
 
-                // Cek apakah password cocok
-                if (hashedPassword != null && BCrypt.checkpw(password, hashedPassword)) {
-                    return true; // Login berhasil
+                // Periksa password
+                if (BCrypt.checkpw(password, hashedPassword)) {
+                    Session.setId_user(idUser);
+                    Session.setRole(role);
+                    System.out.println("Login berhasil untuk user ID: " + idUser);
+                    return true;
+                } else {
+                    System.out.println("Password salah.");
+                    return false;
                 }
+            } else {
+                System.out.println("Username tidak ditemukan.");
+                return false;
             }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println("Gagal melakukan login: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Gagal melakukan login: " + e.getMessage());
+            return false;
+        } finally {
+            // Tutup semua resources (best practice)
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
         }
-
-        return false; // Login gagal
     }
 }
