@@ -4,34 +4,110 @@
  */
 package ViewAdmin;
 
-/**
- *
- * @author Axioo Pongo
- */
-import ViewAdmin.Data;
-import ViewGuru.DetailPresensi;
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
+import Controller.MonitoringController;
+import DataBase.DBConnection;
+import Model.Guru;
+import Model.Instansi;
+import Model.Monitoring;
+import Model.Siswa;
+
+
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
+
 public class DataMonitoring extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DataMonitoring
-     */
-     
+    private MonitoringController controller;
+    private int id_siswa, id_guru, id_instansi;
+    String guru;
      
     public DataMonitoring() {
-        initComponents();
-        Data.inputan();
-        tampilDataKeTabel();
-        
-        bCancle.setVisible(false);
-        bSimpanEdit.setVisible(false);
-        
-        
+        super("Data Monitoring");
+            initComponents();
+            controller = new MonitoringController(); // menghubungkan ke Controller
+            tblDataMonitoring.getSelectionModel().addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting() && tblDataMonitoring.getSelectedRow() != -1) {
+                    int row = tblDataMonitoring.getSelectedRow();
+
+                    tfNama.setText(tblDataMonitoring.getValueAt(row, 1).toString());
+                    tfMulai.setText(tblDataMonitoring.getValueAt(row, 2).toString());
+                    tfSelesai.setText(tblDataMonitoring.getValueAt(row, 3).toString());
+                    cbStatus.setSelectedItem(tblDataMonitoring.getValueAt(row, 4).toString());
+                    tfInstansi.setText(tblDataMonitoring.getValueAt(row, 5).toString());
+
+                    // Nonaktifkan tombol Tambah
+                    bTambah.setEnabled(false);
+
+                    // Aktifkan tombol Edit dan Hapus
+                    bEdit.setEnabled(true);
+                    bCancle.setEnabled(true);
+                }
+            });
+            resetForm();
+            tampilDataKeTabel();
     }
    
+    private void tampilDataKeTabel() {
+        DefaultTableModel model = (DefaultTableModel) tblDataMonitoring.getModel();
+        model.setRowCount(0); // Bersihkan tabel sebelum isi
 
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM monitoring"; 
+            
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id_monitoring = rs.getInt("id");
+                id_siswa = rs.getInt("siswa_id");
+                id_guru = rs.getInt("guru_id");
+                id_instansi = rs.getInt("instansi_id");
+                int status = rs.getInt("status");
+                String mulai = rs.getString("tanggal_mulai");
+                String selesai = rs.getString("tanggal_selesai");
+                //id_guru = rs.getInt("guru_id");
+                
+                String nama = controller.getNamaSiswaById(id_siswa);
+                guru = controller.getNamaGuruById(id_guru);
+                String instansi = controller.getNamaInstansiById(id_instansi);
+                if(mulai == null){
+                    mulai = "-";
+                }
+                if(selesai == null){
+                    selesai = "-";
+                }
+
+                model.addRow(new Object[]{id_monitoring, nama, mulai, selesai, status, instansi});
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+        }
+    }
+    
+    private void resetForm() {
+        tfInstansi.setText("");
+        tfNama.setText("");
+        tfMulai.setText("");
+        tfSelesai.setText("");
+        cbStatus.setSelectedIndex(0);
+
+        tblDataMonitoring.clearSelection(); // hapus seleksi di tabel
+
+        // Tombol kembali ke default
+        bTambah.setEnabled(true);
+        bEdit.setEnabled(false);
+        bSimpan.setVisible(false);
+        bCancle.setVisible(false);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,62 +118,32 @@ public class DataMonitoring extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tDataMonitoring = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        bHapus = new javax.swing.JButton();
         bEdit = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         tfNama = new javax.swing.JTextField();
-        tfNisn = new javax.swing.JTextField();
-        tfKelas = new javax.swing.JTextField();
-        tfBulanMulai = new javax.swing.JTextField();
+        tfMulai = new javax.swing.JTextField();
+        tfSelesai = new javax.swing.JTextField();
         tfInstansi = new javax.swing.JTextField();
+        bTambah = new javax.swing.JButton();
         bSimpan = new javax.swing.JButton();
-        bSimpanEdit = new javax.swing.JButton();
         bCancle = new javax.swing.JButton();
-        bClear = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        tfGUru = new javax.swing.JTextField();
+        cbStatus = new javax.swing.JComboBox<>();
         bLihatPresensi = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblDataMonitoring = new javax.swing.JTable();
 
         jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        tDataMonitoring.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Nama ", "Nisn", "Kelas", "Bulan Mulai / tanggal selesai", "Instansi"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tDataMonitoring.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                tDataMonitoringAncestorAdded(evt);
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-        });
-        jScrollPane1.setViewportView(tDataMonitoring);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Data Monitoring");
@@ -107,13 +153,6 @@ public class DataMonitoring extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Nama :");
 
-        bHapus.setText("Hapus");
-        bHapus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bHapusActionPerformed(evt);
-            }
-        });
-
         bEdit.setText("Edit");
         bEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,28 +161,28 @@ public class DataMonitoring extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("NISN :");
+        jLabel3.setText("Mulai");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("Kelas :");
+        jLabel4.setText("Selesai");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setText("Bulan mulai i:");
+        jLabel5.setText("Status");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Instansi");
+
+        bTambah.setText("Tambah");
+        bTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bTambahActionPerformed(evt);
+            }
+        });
 
         bSimpan.setText("Simpan");
         bSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bSimpanActionPerformed(evt);
-            }
-        });
-
-        bSimpanEdit.setText("Simpan");
-        bSimpanEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bSimpanEditActionPerformed(evt);
             }
         });
 
@@ -154,12 +193,10 @@ public class DataMonitoring extends javax.swing.JFrame {
             }
         });
 
-        bClear.setText("clear");
-        bClear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bClearActionPerformed(evt);
-            }
-        });
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setText("Guru");
+
+        cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1. Ditolak", "2. Pengajuan", "3. Diterima", "4. Pelaksanaan", "5. Selesai" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -177,33 +214,34 @@ public class DataMonitoring extends javax.swing.JFrame {
                         .addGap(40, 40, 40)
                         .addComponent(tfInstansi))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(tfBulanMulai))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
-                        .addComponent(tfNisn))
+                        .addComponent(tfMulai))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
-                        .addComponent(tfKelas))
+                        .addComponent(tfSelesai))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(tfGUru))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(bClear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(bEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(bSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(bCancle, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(bSimpanEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 6, Short.MAX_VALUE)))
+                                .addComponent(bEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 140, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(bCancle, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -216,31 +254,32 @@ public class DataMonitoring extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
-                    .addComponent(tfNisn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfMulai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(tfKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(tfBulanMulai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(tfInstansi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(54, 54, 54)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bHapus)
-                    .addComponent(bEdit)
-                    .addComponent(bSimpan))
+                    .addComponent(jLabel7)
+                    .addComponent(tfGUru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addComponent(bEdit)
                 .addGap(18, 18, 18)
+                .addComponent(bTambah)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bSimpanEdit)
+                    .addComponent(bSimpan)
                     .addComponent(bCancle))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(bClear)
-                .addContainerGap())
+                .addGap(25, 25, 25))
         );
 
         bLihatPresensi.setText("Lihat presensi");
@@ -257,18 +296,49 @@ public class DataMonitoring extends javax.swing.JFrame {
             }
         });
 
+        tblDataMonitoring.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "id", "Nama", "Mulai", "Selesai", "Status", "Instansi"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblDataMonitoring);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(289, 289, 289)
                         .addComponent(bLihatPresensi, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -291,11 +361,11 @@ public class DataMonitoring extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
                         .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
 
@@ -303,151 +373,113 @@ public class DataMonitoring extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bLihatPresensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLihatPresensiActionPerformed
-        // TODO add your handling code here:
-        int selectedRow = tDataMonitoring.getSelectedRow();
-if (selectedRow != -1) {
-    String nama = tDataMonitoring.getValueAt(selectedRow, 0).toString();
-    String nisn = tDataMonitoring.getValueAt(selectedRow, 1).toString();
-    String instansi = tDataMonitoring.getValueAt(selectedRow, 2).toString();
-
-    // Buka form detail dan kirim data
-    DetailPresensi dp = new DetailPresensi(nama, nisn, instansi);
-    dp.setVisible(true);
-} else {
-     JOptionPane.showMessageDialog(this, "Silakan pilih baris data terlebih dahulu.");
-}
+        
     }//GEN-LAST:event_bLihatPresensiActionPerformed
-
-    private void tDataMonitoringAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tDataMonitoringAncestorAdded
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tDataMonitoring.getModel();
-        
-     Object[] rowData = new Object[4];
-
-    
-        
-        
-        
-                
-        
-    
-    
-    model.addRow(rowData);
-    }//GEN-LAST:event_tDataMonitoringAncestorAdded
-
-    private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
-        // TODO add your handling code here:
-        int selectedRow = tDataMonitoring.getSelectedRow();
-
-    if (selectedRow >= 0) {
-        
-        Data.getMonitoring().remove(selectedRow);
-
-        
-        tampilDataKeTabel();
-    } else {
-        
-        javax.swing.JOptionPane.showMessageDialog(this, "Pilih baris yang ingin dihapus terlebih dahulu.");
-    }
-        
-        
-        
-    }//GEN-LAST:event_bHapusActionPerformed
 
     private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
         // TODO add your handling code here:
-        
-        int selectedRowIndex = tDataMonitoring.getSelectedRow();
-    if (selectedRowIndex >= 0 && selectedRowIndex < Data.getMonitoring().size()) {
-        Data d = Data.getMonitoring().get(selectedRowIndex);
+        int selectedRow = tblDataMonitoring.getSelectedRow();
 
-        tfNama.setText(d.getNama());
-        tfNisn.setText(d.getNISN());
-        tfKelas.setText(d.getKelas());
-        tfBulanMulai.setText(d.getMulai());
-        tfInstansi.setText(d.getInstansi());
-        bSimpan.setVisible(false);
-        bSimpanEdit.setVisible(true);
+    if (selectedRow >= 0) {
+        // Ambil data dari kolom pada baris yang dipilih
+        int id = (int) tblDataMonitoring.getValueAt(selectedRow, 0);
+        String nama = tblDataMonitoring.getValueAt(selectedRow, 1).toString();
+        String mulai = tblDataMonitoring.getValueAt(selectedRow, 2).toString();
+        String selesai = tblDataMonitoring.getValueAt(selectedRow, 3).toString();
+        String status = tblDataMonitoring.getValueAt(selectedRow, 4).toString();
+        String instansi = tblDataMonitoring.getValueAt(selectedRow, 5).toString();
+
+        // Tampilkan ke form
+        tfNama.setText(controller.getIdSiswaByMonitoringId(id).toString());
+        tfMulai.setText(mulai);
+        tfSelesai.setText(selesai);
+        cbStatus.setSelectedItem(status);
+        tfInstansi.setText(controller.getIdInstansiByMonitoringId(id).toString());
+        tfGUru.setText(controller.getIdGuruByMonitoringId(id).toString());
+
+        // Tampilkan tombol simpan & cancel
+        bSimpan.setVisible(true);
         bCancle.setVisible(true);
-    }
-   
         
+        // Simpan row index yang diedit ke variable tersembunyi
+        tblDataMonitoring.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
+        }
     }//GEN-LAST:event_bEditActionPerformed
 
+    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
+        //int id = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 1).toString());
+            String idSiswa = tfNama.getText();
+            String idGuru = tfGUru.getText();
+            String idInstansi = tfInstansi.getText();
+            int status = cbStatus.getSelectedIndex();
+
+            //Model
+            
+            Siswa siswa = new Siswa();
+            siswa.setId(Integer.parseInt(idSiswa));
+
+            Guru guru = new Guru();
+            guru.setId(Integer.parseInt(idGuru));
+            
+            
+            Monitoring monitoringTambah= new Monitoring();
+            monitoringTambah.setGuru_id(guru);
+            monitoringTambah.setSiswa_id(siswa);
+            
+            
+            //Controller
+            controller.tambahMonitoring(monitoringTambah);
+
+            // Bersihkan form
+            resetForm();
+
+            tampilDataKeTabel();
+    }//GEN-LAST:event_bTambahActionPerformed
+
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
-        // TODO add your handling code here:
-        String nama = tfNama.getText();
-        String nisn = tfNisn.getText();
-        String kelas = tfKelas.getText();
-        String mulai = tfBulanMulai.getText();
-        String instansi = tfInstansi.getText();
+        int selectedRow = tblDataMonitoring.getSelectedRow();
+        if (selectedRow >= 0) {
+            int id = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 0).toString());
+            String idSiswa = tfNama.getText();
+            String idGuru = tfGUru.getText();
+            String idInstansi = tfInstansi.getText();
+            int status = cbStatus.getSelectedIndex();
 
-    
-    Data dataBaru = new Data(nama, nisn, kelas, mulai, instansi);
+            //Model
+            
+            Siswa siswa = new Siswa();
+            siswa.setId(Integer.parseInt(idSiswa));
 
-    
-    Data.getMonitoring().add(dataBaru);
+            Guru guru = new Guru();
+            guru.setId(Integer.parseInt(idGuru));
+            
+            Instansi instansi = new Instansi();
+            instansi.setId(Integer.parseInt(idInstansi));
+            
+            Monitoring monitoringEdit = new Monitoring();
+            monitoringEdit.setGuru_id(guru);
+            monitoringEdit.setInstansi_id(instansi);
+            monitoringEdit.setSiswa_id(siswa);
+            
+            
+            //Controller
+            controller.editMonitoring(monitoringEdit);
+            MonitoringController.updateStatusAdmin(id, status);
 
-   
-    tampilDataKeTabel();
-    
-    
+            // Bersihkan form
+            resetForm();
+
+            tampilDataKeTabel();
+        }
     }//GEN-LAST:event_bSimpanActionPerformed
-
-    private void bSimpanEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanEditActionPerformed
-        // TODO add your handling code here:
-      int selectedRow = tDataMonitoring.getSelectedRow();
-
-if (selectedRow >= 0) {
-    String nama = tfNama.getText();
-    String nisn = tfNisn.getText();
-    String kelas = tfKelas.getText();
-    String mulai = tfBulanMulai.getText();
-    String instansi = tfInstansi.getText();
-
-    Data dataBaru = new Data(nama, nisn, kelas, mulai, instansi);
-
-    
-    Data.getMonitoring().set(selectedRow, dataBaru);
-
-    tampilDataKeTabel();
-
-    
-        } 
-bCancle.setVisible(false);
-    bSimpanEdit.setVisible(false);
-
-    tfNama.setText("");
-    tfNisn.setText("");
-    tfKelas.setText("");
-    tfBulanMulai.setText("");
-    tfInstansi.setText("");
-
-    bSimpan.setVisible(true);
-    }//GEN-LAST:event_bSimpanEditActionPerformed
 
     private void bCancleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancleActionPerformed
         // TODO add your handling code here:
-        bSimpan.setVisible(true);
-        bSimpanEdit.setVisible(false);
-        bCancle.setVisible(false);
-         tfNama.setText("");
-        tfNisn.setText("");
-        tfKelas.setText("");
-        tfBulanMulai.setText("");
-        tfInstansi.setText("");
+        resetForm();
         
     }//GEN-LAST:event_bCancleActionPerformed
-
-    private void bClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearActionPerformed
-        // TODO add your handling code here:
-         tfNama.setText("");
-        tfNisn.setText("");
-        tfKelas.setText("");
-        tfBulanMulai.setText("");
-        tfInstansi.setText("");
-        
-    }//GEN-LAST:event_bClearActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -455,23 +487,6 @@ bCancle.setVisible(false);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    
-    private void tampilDataKeTabel() {
-     DefaultTableModel model = (DefaultTableModel) tDataMonitoring.getModel();
-    model.setRowCount(0); // reset isi tabel
-
-    for (Data d : Data.getMonitoring()) {
-        Object[] rowData = {
-            d.getNama(),
-            d.getNISN(),
-            d.getKelas(),
-            d.getMulai(),
-            d.getInstansi()
-        };
-        model.addRow(rowData);
-    }
-}
 
     /**
      * @param args the command line arguments
@@ -511,12 +526,11 @@ bCancle.setVisible(false);
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancle;
-    private javax.swing.JButton bClear;
     private javax.swing.JButton bEdit;
-    private javax.swing.JButton bHapus;
     private javax.swing.JButton bLihatPresensi;
     private javax.swing.JButton bSimpan;
-    private javax.swing.JButton bSimpanEdit;
+    private javax.swing.JButton bTambah;
+    private javax.swing.JComboBox<String> cbStatus;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -525,13 +539,14 @@ bCancle.setVisible(false);
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataMonitoring;
-    private javax.swing.JTextField tfBulanMulai;
+    private javax.swing.JTable tblDataMonitoring;
+    private javax.swing.JTextField tfGUru;
     private javax.swing.JTextField tfInstansi;
-    private javax.swing.JTextField tfKelas;
+    private javax.swing.JTextField tfMulai;
     private javax.swing.JTextField tfNama;
-    private javax.swing.JTextField tfNisn;
+    private javax.swing.JTextField tfSelesai;
     // End of variables declaration//GEN-END:variables
 }

@@ -11,6 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class GuruController {
+
+    public GuruController() {
+    }
     public static void editGuru(Guru guru) {
         String query = "UPDATE guru SET nama = ?, alamat = ?, nip = ?, jenis_kelamin = ? WHERE id = ?";
 

@@ -23,6 +23,14 @@ public class User {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
     public void setNama(String nama) {
         this.nama = nama;
     }

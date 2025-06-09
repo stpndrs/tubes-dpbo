@@ -4,20 +4,94 @@
  */
 package ViewAdmin;
 
-import ViewAdmin.DataG;
+import Controller.SiswaController;
+import DataBase.DBConnection;
+import Model.Siswa;
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
 
 /**
  *
  * @author Axioo Pongo
  */
-public class DataSiswa extends javax.swing.JFrame {
+    public class DataSiswa extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DataSiswa
-     */
-    public DataSiswa() {
-        initComponents();
-        //tampilDataKeTabel();
+        private SiswaController controller;
+
+        public DataSiswa() {
+            super("Data Siswa");
+            initComponents();
+            controller = new SiswaController(); // menghubungkan ke Controller
+            tblDataSiswa.getSelectionModel().addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting() && tblDataSiswa.getSelectedRow() != -1) {
+                    int row = tblDataSiswa.getSelectedRow();
+
+                    tfNama.setText(tblDataSiswa.getValueAt(row, 1).toString());
+                    tfAlamat.setText(tblDataSiswa.getValueAt(row, 2).toString());
+                    tfNisn.setText(tblDataSiswa.getValueAt(row, 3).toString());
+                    cbJenisKelamin.setSelectedItem(tblDataSiswa.getValueAt(row, 4).toString());
+                    tfKelas.setText(tblDataSiswa.getValueAt(row, 5).toString());
+
+                    // Nonaktifkan tombol Tambah
+                    bTambah.setEnabled(false);
+
+                    // Aktifkan tombol Edit dan Hapus
+                    bEdit.setEnabled(true);
+                    bCancle.setEnabled(true);
+                }
+            });
+            resetForm();
+            tampilDataKeTabel();
+        }
+
+        private void tampilDataKeTabel() {
+        DefaultTableModel model = (DefaultTableModel) tblDataSiswa.getModel();
+        model.setRowCount(0); // Bersihkan tabel sebelum isi
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM siswa"; 
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nama = rs.getString("nama");
+                String alamat = rs.getString("alamat");
+                String nisn = rs.getString("nisn");
+                int jenisKelamin = rs.getInt("jenis_kelamin");
+                String kelas = rs.getString("kelas");
+
+                model.addRow(new Object[]{id, nama, alamat, nisn, jenisKelamin, kelas});
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+        }
+    }
+        
+    private void resetForm() {
+        tfNama.setText("");
+        tfAlamat.setText("");
+        tfNisn.setText("");
+        tfKelas.setText("");
+        cbJenisKelamin.setSelectedIndex(0);
+
+        tblDataSiswa.clearSelection(); // hapus seleksi di tabel
+
+        // Tombol kembali ke default
+        bTambah.setEnabled(true);
+        bEdit.setEnabled(false);
+        bSimpan.setVisible(false);
+        bCancle.setVisible(false);
     }
 
     /**
@@ -37,16 +111,16 @@ public class DataSiswa extends javax.swing.JFrame {
         tfNama = new javax.swing.JTextField();
         tfAlamat = new javax.swing.JTextField();
         tfKelas = new javax.swing.JTextField();
-        cbJenisKelamin = new javax.swing.JComboBox<>();
         bCancle = new javax.swing.JButton();
         bSimpan = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        tfAlamat1 = new javax.swing.JTextField();
+        tfNisn = new javax.swing.JTextField();
+        cbJenisKelamin = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tDataSiswa = new javax.swing.JTable();
+        tblDataSiswa = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         bEdit = new javax.swing.JButton();
-        Btambah = new javax.swing.JButton();
+        bTambah = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -71,14 +145,6 @@ public class DataSiswa extends javax.swing.JFrame {
             }
         });
 
-        cbJenisKelamin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-Laki", "Perempuan" }));
-        cbJenisKelamin.setToolTipText("");
-        cbJenisKelamin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbJenisKelaminActionPerformed(evt);
-            }
-        });
-
         bCancle.setText("cancle");
         bCancle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,6 +162,13 @@ public class DataSiswa extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Nisn :");
+
+        cbJenisKelamin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 Laki-Laki", "2 Prempuan" }));
+        cbJenisKelamin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbJenisKelaminActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -117,11 +190,11 @@ public class DataSiswa extends javax.swing.JFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfNama)
+                    .addComponent(tfNama, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                     .addComponent(tfAlamat)
                     .addComponent(tfKelas)
-                    .addComponent(cbJenisKelamin, 0, 318, Short.MAX_VALUE)
-                    .addComponent(tfAlamat1))
+                    .addComponent(tfNisn)
+                    .addComponent(cbJenisKelamin, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(26, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -144,7 +217,7 @@ public class DataSiswa extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(tfAlamat1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfNisn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -157,30 +230,37 @@ public class DataSiswa extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bCancle)
                     .addComponent(bSimpan))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(239, Short.MAX_VALUE))
         );
 
-        tDataSiswa.setModel(new javax.swing.table.DefaultTableModel(
+        tblDataSiswa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Nama", "Alamat", "NISN", "Jenis kelmamin", "Kelas"
+                "Id", "Nama", "Alamat", "NISN", "Jenis kelmamin", "Kelas"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tDataSiswa);
+        jScrollPane1.setViewportView(tblDataSiswa);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Manajement Data Siswa");
@@ -192,10 +272,10 @@ public class DataSiswa extends javax.swing.JFrame {
             }
         });
 
-        Btambah.setText("Tambah");
-        Btambah.addActionListener(new java.awt.event.ActionListener() {
+        bTambah.setText("Tambah");
+        bTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtambahActionPerformed(evt);
+                bTambahActionPerformed(evt);
             }
         });
 
@@ -210,7 +290,7 @@ public class DataSiswa extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -218,7 +298,7 @@ public class DataSiswa extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(bEdit)
-                            .addComponent(Btambah))
+                            .addComponent(bTambah))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -239,13 +319,13 @@ public class DataSiswa extends javax.swing.JFrame {
                         .addGap(133, 133, 133)
                         .addComponent(bEdit)
                         .addGap(18, 18, 18)
-                        .addComponent(Btambah)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(bTambah)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 337, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
@@ -256,86 +336,87 @@ public class DataSiswa extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfKelasActionPerformed
 
-    private void cbJenisKelaminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbJenisKelaminActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbJenisKelaminActionPerformed
-
     private void bCancleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancleActionPerformed
         // TODO add your handling code here:
-        tfNama.setText("");
-        tfAlamat.setText("");
-        tfKelas.setText("");
-        bSimpan.setVisible(false);
-        bCancle.setVisible(false);
+        resetForm();
     }//GEN-LAST:event_bCancleActionPerformed
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
-        int selectedRow = tDataSiswa.getSelectedRow();
+        int selectedRow = tblDataSiswa.getSelectedRow();
+    if (selectedRow >= 0) {
+        int id = Integer.parseInt(tblDataSiswa.getValueAt(selectedRow, 0).toString());
+        String nama = tfNama.getText();
+        String alamat = tfAlamat.getText();
+        String nisn = tfNisn.getText();
+        int jenisKelamin = cbJenisKelamin.getSelectedIndex();
+        String kelas = tfKelas.getText();
 
-        if (selectedRow >= 0) {
-
-           // String nama = tfNama.getText();
-          // String alamat = tfAlamat.getText();
-          //  String nip = tfKelas.getText();
-            //String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
-
-           //DataG data = DataG.getGuru().get(selectedRow);
-            //data.setNama(nama);
-            //data.setAlamat(alamat);
-           // data.setNip(nip);
-           // data.setJenisKelamin(jenisKelamin);
-
-            //tampilDataKeTabel();
-
-        }
-        tfNama.setText("");
-        tfAlamat.setText("");
-        tfKelas.setText("");
-        cbJenisKelamin.setSelectedIndex(0);
-
-        bSimpan.setVisible(false);
-        bCancle.setVisible(false);
+        //Model
+        Siswa siswaEdit = new Siswa(jenisKelamin, nama, alamat, nisn, kelas);
+        siswaEdit.setId(id);
+        //COntroller
+        SiswaController.editSiswa(siswaEdit);
+        
+        // Bersihkan form
+        resetForm();
+        
+        tampilDataKeTabel();
+    }
     }//GEN-LAST:event_bSimpanActionPerformed
 
     private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tDataSiswa.getSelectedRow();
+        int selectedRow = tblDataSiswa.getSelectedRow();
 
-        if (selectedRow >= 0) {
+    if (selectedRow >= 0) {
+        // Ambil data dari kolom pada baris yang dipilih
+        int id_siswa = (int) tblDataSiswa.getValueAt(selectedRow, 0);
+        String nama = tblDataSiswa.getValueAt(selectedRow, 1).toString();
+        String alamat = tblDataSiswa.getValueAt(selectedRow, 2).toString();
+        String nisn = tblDataSiswa.getValueAt(selectedRow, 3).toString();
+        String jenisKelamin = tblDataSiswa.getValueAt(selectedRow, 4).toString();
+        String kelas = tblDataSiswa.getValueAt(selectedRow, 5).toString();
 
-            DataG guru = DataG.getGuru().get(selectedRow);
+        // Tampilkan ke form
+        tfNama.setText(nama);
+        tfAlamat.setText(alamat);
+        tfNisn.setText(nisn);
+        cbJenisKelamin.setSelectedItem(jenisKelamin);
+        tfKelas.setText(kelas);
 
-            //tfNama.setText(guru.getNama());
-            //tfAlamat.setText(guru.getAlamat());
-            //cbJenisKelamin.setSelectedItem(guru.getJenisKelamin());
-            //tfKelas.setText(guru.getNip());
-
-            //bSimpan.setVisible(true);
-           // bCancle.setVisible(true);
-
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
+        // Tampilkan tombol simpan & cancel
+        bSimpan.setVisible(true);
+        bCancle.setVisible(true);
+        
+        // Simpan row index yang diedit ke variable tersembunyi
+        tblDataSiswa.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
+    } else {
+        JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
         }
     }//GEN-LAST:event_bEditActionPerformed
 
-    private void BtambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtambahActionPerformed
+    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
         // TODO add your handling code here:
-       //String nama = tfNama.getText();
-        //String alamat = tfAlamat.getText();
-       // String nip = tfKelas.getText();
-       // String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
+        String nama = tfNama.getText();
+        String alamat = tfAlamat.getText();
+        String nisn = tfNisn.getText();
+        String kelas = tfKelas.getText();
+        int jenisKelamin = cbJenisKelamin.getSelectedIndex();
 
-       // DataG dataBaru = new DataG(nama, alamat, jenisKelamin, nip);
-
-       // DataG.getGuru().add(dataBaru);
-
-        //tampilDataKeTabel();
-
-        //tfNama.setText("");
-        //fAlamat.setText("");
-        //tfKelas.setText("");
-        //bJenisKelamin.setSelectedIndex(0);
-    }//GEN-LAST:event_BtambahActionPerformed
+        if (nama.isEmpty() || alamat.isEmpty() || nisn.isEmpty() || kelas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");
+            return;
+        }
+        
+        //MODEL
+        Siswa siswaBaru = new Siswa(jenisKelamin, nama, alamat, nisn, kelas);
+        
+        //CONTROLLER
+        SiswaController.tambahSiswa(siswaBaru);
+        
+        resetForm();
+        tampilDataKeTabel();
+    }//GEN-LAST:event_bTambahActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -343,6 +424,10 @@ public class DataSiswa extends javax.swing.JFrame {
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void cbJenisKelaminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbJenisKelaminActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbJenisKelaminActionPerformed
 
     /**
      * @param args the command line arguments
@@ -380,10 +465,10 @@ public class DataSiswa extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Btambah;
     private javax.swing.JButton bCancle;
     private javax.swing.JButton bEdit;
     private javax.swing.JButton bSimpan;
+    private javax.swing.JButton bTambah;
     private javax.swing.JComboBox<String> cbJenisKelamin;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -394,10 +479,10 @@ public class DataSiswa extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataSiswa;
+    private javax.swing.JTable tblDataSiswa;
     private javax.swing.JTextField tfAlamat;
-    private javax.swing.JTextField tfAlamat1;
     private javax.swing.JTextField tfKelas;
     private javax.swing.JTextField tfNama;
+    private javax.swing.JTextField tfNisn;
     // End of variables declaration//GEN-END:variables
 }

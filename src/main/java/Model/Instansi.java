@@ -13,12 +13,11 @@ public class Instansi {
     private String nama, alamat, telpon;
     private User user_id;
 
-    public Instansi(int kouta, String nama, String alamat, String telpon, User user_id ) {
+    public Instansi(int kouta, String nama, String alamat, String telpon ) {
         this.kouta = kouta;
         this.nama = nama;
         this.alamat = alamat;
         this.telpon = telpon;
-        this.user_id = user_id;
     }
     
     public Instansi(){

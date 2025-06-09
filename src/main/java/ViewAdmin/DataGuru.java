@@ -4,25 +4,96 @@
  */
 package ViewAdmin;
 
-import ViewAdmin.DataG;
+import DataBase.DBConnection;
+
+import Controller.GuruController;
+import Controller.SiswaController;
+import DataBase.DBConnection;
+import Model.Guru;
+import Model.Siswa;
+
+
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
 
 /**
  *
  * @author Axioo Pongo
  */
 public class DataGuru extends javax.swing.JFrame {
-
-    /**
-     * Creates new form DataGuru
-     */
+    
+    private GuruController controller;
+    
     public DataGuru() {
-        initComponents();
-        DataG.data();
-        tampilDataKeTabel();
+        super("Data Guru");
+            initComponents();
+            controller = new GuruController();// menghubungkan ke Controller
+            tblDataGuru.getSelectionModel().addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting() && tblDataGuru.getSelectedRow() != -1) {
+                    int row = tblDataGuru.getSelectedRow();
+
+                    tfNama.setText(tblDataGuru.getValueAt(row, 1).toString());
+                    tfAlamat.setText(tblDataGuru.getValueAt(row, 2).toString());
+                    tfNip.setText(tblDataGuru.getValueAt(row, 4).toString());
+                    cbJenisKelamin.setSelectedItem(tblDataGuru.getValueAt(row, 3).toString());
+
+                    // Nonaktifkan tombol Tambah
+                    bTambah.setEnabled(false);
+
+                    // Aktifkan tombol Edit dan Hapus
+                    bEdit.setEnabled(true);
+                    bCancle.setEnabled(true);
+                }
+            });
+            resetForm();
+            tampilDataKeTabel();
+    }
+    
+    private void tampilDataKeTabel() {
+        DefaultTableModel model = (DefaultTableModel) tblDataGuru.getModel();
+        model.setRowCount(0); // Bersihkan tabel sebelum isi
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM guru"; 
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nama = rs.getString("nama");
+                String alamat = rs.getString("alamat");
+                String nip = rs.getString("nip");
+                int jenisKelamin = rs.getInt("jenis_kelamin");
+
+                model.addRow(new Object[]{id, nama, alamat, jenisKelamin, nip});
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+        }
+    }
+
+    
+    private void resetForm() {
+        tfNama.setText("");
+        tfAlamat.setText("");
+        tfNip.setText("");
+        cbJenisKelamin.setSelectedIndex(0);
+
+        tblDataGuru.clearSelection(); // hapus seleksi di tabel
+
+        // Tombol kembali ke default
+        bTambah.setEnabled(true);
+        bEdit.setEnabled(false);
         bSimpan.setVisible(false);
         bCancle.setVisible(false);
-          
     }
 
     /**
@@ -37,7 +108,7 @@ public class DataGuru extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tDataGuru = new javax.swing.JTable();
+        tblDataGuru = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -51,7 +122,7 @@ public class DataGuru extends javax.swing.JFrame {
         bCancle = new javax.swing.JButton();
         bSimpan = new javax.swing.JButton();
         bEdit = new javax.swing.JButton();
-        Btambah = new javax.swing.JButton();
+        bTambah = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -69,26 +140,33 @@ public class DataGuru extends javax.swing.JFrame {
 
         jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        tDataGuru.setModel(new javax.swing.table.DefaultTableModel(
+        tblDataGuru.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Nama", "Alamat", "Jenis kelmamin", "NIP"
+                "Id", "Nama", "Alamat", "Jenis kelmamin", "NIP"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tDataGuru);
+        jScrollPane1.setViewportView(tblDataGuru);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Manajement Data Guru");
@@ -113,7 +191,7 @@ public class DataGuru extends javax.swing.JFrame {
             }
         });
 
-        cbJenisKelamin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-Laki", "Perempuan" }));
+        cbJenisKelamin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1. Laki-Laki", "2. Perempuan" }));
         cbJenisKelamin.setToolTipText("");
         cbJenisKelamin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -199,10 +277,10 @@ public class DataGuru extends javax.swing.JFrame {
             }
         });
 
-        Btambah.setText("Tambah");
-        Btambah.addActionListener(new java.awt.event.ActionListener() {
+        bTambah.setText("Tambah");
+        bTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtambahActionPerformed(evt);
+                bTambahActionPerformed(evt);
             }
         });
 
@@ -225,7 +303,7 @@ public class DataGuru extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(bEdit)
-                            .addComponent(Btambah))
+                            .addComponent(bTambah))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -253,7 +331,7 @@ public class DataGuru extends javax.swing.JFrame {
                         .addGap(133, 133, 133)
                         .addComponent(bEdit)
                         .addGap(18, 18, 18)
-                        .addComponent(Btambah)
+                        .addComponent(bTambah)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -286,86 +364,82 @@ public class DataGuru extends javax.swing.JFrame {
     }//GEN-LAST:event_cbJenisKelaminActionPerformed
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
-      int selectedRow = tDataGuru.getSelectedRow();
+        int selectedRow = tblDataGuru.getSelectedRow();
+        if (selectedRow >= 0) {
+            int id = Integer.parseInt(tblDataGuru.getValueAt(selectedRow, 0).toString());
+            String nama = tfNama.getText();
+            String alamat = tfAlamat.getText();
+            String nip = tfNip.getText();
+            int jenisKelamin = cbJenisKelamin.getSelectedIndex();
 
-    if (selectedRow >= 0) {
-        
-        String nama = tfNama.getText();
-        String alamat = tfAlamat.getText();
-        String nip = tfNip.getText();
-        String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
+            //Model
+            Guru guruEdit = new Guru(jenisKelamin, nama, alamat, nip);
+            guruEdit.setId(id);
 
-        
-        DataG data = DataG.getGuru().get(selectedRow);
-        data.setNama(nama);
-        data.setAlamat(alamat);
-        data.setNip(nip);
-        data.setJenisKelamin(jenisKelamin);
+            //Controller
+            GuruController.editGuru(guruEdit);
 
-        tampilDataKeTabel(); 
-
-        
-        
-    }
-    tfNama.setText("");
-        tfAlamat.setText("");
-        tfNip.setText("");
-        cbJenisKelamin.setSelectedIndex(0);
-
-        bSimpan.setVisible(false);
-        bCancle.setVisible(false);
+            // Bersihkan form
+            resetForm();
+            tampilDataKeTabel();
+        }
     }//GEN-LAST:event_bSimpanActionPerformed
 
     private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tDataGuru.getSelectedRow();
-    
-    if (selectedRow >= 0) {
-       
-        DataG guru = DataG.getGuru().get(selectedRow);
-        
-        
-        tfNama.setText(guru.getNama());
-        tfAlamat.setText(guru.getAlamat());
-        cbJenisKelamin.setSelectedItem(guru.getJenisKelamin());
-        tfNip.setText(guru.getNip());
+        int selectedRow = tblDataGuru.getSelectedRow();
 
-        
+    if (selectedRow >= 0) {
+        // Ambil data dari kolom pada baris yang dipilih
+        int id_guru = (int) tblDataGuru.getValueAt(selectedRow, 0);
+        String nama = tblDataGuru.getValueAt(selectedRow, 1).toString();
+        String alamat = tblDataGuru.getValueAt(selectedRow, 2).toString();
+        String jenisKelamin = tblDataGuru.getValueAt(selectedRow, 3).toString();
+        String nip = tblDataGuru.getValueAt(selectedRow, 4).toString();
+
+        // Tampilkan ke form
+        tfNama.setText(nama);
+        tfAlamat.setText(alamat);
+        tfNip.setText(nip);
+        cbJenisKelamin.setSelectedItem(jenisKelamin);
+
+        // Tampilkan tombol simpan & cancel
         bSimpan.setVisible(true);
         bCancle.setVisible(true);
 
+        // Simpan row index yang diedit ke variable tersembunyi
+        tblDataGuru.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
     } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
-    }
+        JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
+        }
     }//GEN-LAST:event_bEditActionPerformed
 
     private void bCancleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancleActionPerformed
         // TODO add your handling code here:
-        tfNama.setText("");
-        tfAlamat.setText("");
-        tfNip.setText("");
-         bSimpan.setVisible(false);
-        bCancle.setVisible(false);
+        resetForm();
     }//GEN-LAST:event_bCancleActionPerformed
 
-    private void BtambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtambahActionPerformed
-        // TODO add your handling code here:
-         String nama = tfNama.getText();
-    String alamat = tfAlamat.getText();
-    String nip = tfNip.getText();
-    String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
+    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
+        String nama = tfNama.getText();
+        String alamat = tfAlamat.getText();
+        String nip = tfNip.getText();
+        int jenisKelamin = cbJenisKelamin.getSelectedIndex();
 
-    DataG dataBaru = new DataG(nama, alamat, jenisKelamin, nip);
+        if (nama.isEmpty() || alamat.isEmpty() || nip.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");
+            return;
+        }
+        //Model
+        Guru guruBaru = new Guru(jenisKelamin, nama, alamat, nip);
 
-    DataG.getGuru().add(dataBaru);
+        //Controller
+        GuruController.tambahGuru(guruBaru);
 
-    tampilDataKeTabel();
-
-    tfNama.setText("");
-    tfAlamat.setText("");
-    tfNip.setText("");
-    cbJenisKelamin.setSelectedIndex(0);
-    }//GEN-LAST:event_BtambahActionPerformed
+        // Bersihkan form
+        resetForm();
+        
+        tampilDataKeTabel();
+    }//GEN-LAST:event_bTambahActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -408,28 +482,12 @@ public class DataGuru extends javax.swing.JFrame {
             }
         });
     }
-    
-      private void tampilDataKeTabel() {
-     DefaultTableModel model = (DefaultTableModel) tDataGuru.getModel();
-    model.setRowCount(0); // reset isi tabel
-
-    for (DataG G : DataG.getGuru()) {
-        Object[] rowData = {
-            G.getNama(),
-            G.getAlamat(),
-            G.getJenisKelamin(),
-            G.getNip(),
-            
-        };
-        model.addRow(rowData);
-    }
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Btambah;
     private javax.swing.JButton bCancle;
     private javax.swing.JButton bEdit;
     private javax.swing.JButton bSimpan;
+    private javax.swing.JButton bTambah;
     private javax.swing.JComboBox<String> cbJenisKelamin;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -441,7 +499,7 @@ public class DataGuru extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataGuru;
+    private javax.swing.JTable tblDataGuru;
     private javax.swing.JTextField tfAlamat;
     private javax.swing.JTextField tfNama;
     private javax.swing.JTextField tfNip;

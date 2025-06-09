@@ -31,8 +31,8 @@ public class DashBoard extends javax.swing.JFrame {
         bDataSiswa = new javax.swing.JButton();
         bDataGuru = new javax.swing.JButton();
         bDataInstansi = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnPengguna = new javax.swing.JButton();
+        btnMonitoring = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,17 +62,17 @@ public class DashBoard extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Data Pengguna");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnPengguna.setText("Data Pengguna");
+        btnPengguna.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnPenggunaActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Data Monitoring");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnMonitoring.setText("Data Monitoring");
+        btnMonitoring.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnMonitoringActionPerformed(evt);
             }
         });
 
@@ -91,10 +91,8 @@ public class DashBoard extends javax.swing.JFrame {
                             .addComponent(bDataGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(bDataSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(bDataInstansi, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnPengguna, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnMonitoring, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(749, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -109,9 +107,9 @@ public class DashBoard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(bDataInstansi)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4)
+                .addComponent(btnPengguna)
                 .addGap(18, 18, 18)
-                .addComponent(jButton5)
+                .addComponent(btnMonitoring)
                 .addContainerGap(247, Short.MAX_VALUE))
         );
 
@@ -153,17 +151,17 @@ public class DashBoard extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_bDataInstansiActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnPenggunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPenggunaActionPerformed
         // TODO add your handling code here:
-        new DataInstansi().setVisible(true);
+        new DataPenguna().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnPenggunaActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void btnMonitoringActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMonitoringActionPerformed
         // TODO add your handling code here:
         new DataMonitoring().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_btnMonitoringActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,8 +202,8 @@ public class DashBoard extends javax.swing.JFrame {
     private javax.swing.JButton bDataGuru;
     private javax.swing.JButton bDataInstansi;
     private javax.swing.JButton bDataSiswa;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnMonitoring;
+    private javax.swing.JButton btnPengguna;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

@@ -14,6 +14,6 @@ public class InputInstansi {
         String telpon = Util.inputString("Telpon: ");
         int kouta = Util.inputInt("Kouta: ");
 
-        return new Instansi(kouta, nama, alamat, telpon, null);
+        return new Instansi(kouta, nama, alamat, telpon);
     }
 }

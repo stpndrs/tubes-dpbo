@@ -51,10 +51,6 @@ public class TestDbPkl {
             }
             */
             UpdatePasswordKeHashPassword.hashSemuaPassword();
-//            boolean hasil = AuthService.login("admin", "admin");
-//            if(hasil){
-//                System.out.println("Login " + (hasil ? "berhasil" : "gagal"));
-//            }
             
             new LoginView().setVisible(true);
            

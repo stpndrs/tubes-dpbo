@@ -4,7 +4,16 @@
  */
 package ViewAdmin;
 
-import ViewAdmin.DataG;
+import Controller.InstansiController;
+import DataBase.DBConnection;
+import Model.Instansi;
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
 
 /**
  *
@@ -12,11 +21,74 @@ import ViewAdmin.DataG;
  */
 public class DataInstansi extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DataInstansi
-     */
+    private InstansiController controller;
+    
     public DataInstansi() {
-        initComponents();
+        super("Data Siswa");
+            initComponents();
+            controller = new InstansiController(); // menghubungkan ke Controller
+            tblDataInstansi.getSelectionModel().addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting() && tblDataInstansi.getSelectedRow() != -1) {
+                    int row = tblDataInstansi.getSelectedRow();
+                    
+                    tfNama.setText(tblDataInstansi.getValueAt(row, 1).toString());
+                    tfAlamat.setText(tblDataInstansi.getValueAt(row, 2).toString());
+                    tfTelepone.setText(tblDataInstansi.getValueAt(row, 3).toString());
+                    tfSisaKuota.setText(tblDataInstansi.getValueAt(row, 4).toString());
+
+                    // Nonaktifkan tombol Tambah
+                    bTambah.setEnabled(false);
+
+                    // Aktifkan tombol Edit dan Hapus
+                    bEdit.setEnabled(true);
+                    bCancle.setEnabled(true);
+                }
+            });
+            resetForm();
+            tampilDataKeTabel();
+    }
+    
+    private void tampilDataKeTabel() {
+        DefaultTableModel model = (DefaultTableModel) tblDataInstansi.getModel();
+        model.setRowCount(0); // Bersihkan tabel sebelum isi
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM instansi"; 
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nama = rs.getString("nama");
+                String alamat = rs.getString("alamat");
+                String telepon = rs.getString("telepon");
+                int kuota = rs.getInt("kuota");
+
+                model.addRow(new Object[]{id, nama, alamat, telepon, kuota});
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+        }
+    }
+    
+    private void resetForm() {
+        tfNama.setText("");
+        tfAlamat.setText("");
+        tfTelepone.setText("");
+        tfSisaKuota.setText("");
+
+        tblDataInstansi.clearSelection(); // hapus seleksi di tabel
+
+        // Tombol kembali ke default
+        bTambah.setEnabled(true);
+        bEdit.setEnabled(false);
+        bSimpan.setVisible(false);
+        bCancle.setVisible(false);
     }
 
     /**
@@ -40,10 +112,10 @@ public class DataInstansi extends javax.swing.JFrame {
         tfSisaKuota = new javax.swing.JTextField();
         tfTelepone = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tDataSiswa = new javax.swing.JTable();
+        tblDataInstansi = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         bEdit = new javax.swing.JButton();
-        Btambah = new javax.swing.JButton();
+        bTambah = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -137,27 +209,34 @@ public class DataInstansi extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tDataSiswa.setModel(new javax.swing.table.DefaultTableModel(
+        tblDataInstansi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Nama", "Alamat", "Telepon", "sisa kuota"
+                "id", "Nama", "Alamat", "Telepon", "sisa kuota"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tDataSiswa);
+        jScrollPane1.setViewportView(tblDataInstansi);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Manajement Data Instansi");
@@ -169,10 +248,10 @@ public class DataInstansi extends javax.swing.JFrame {
             }
         });
 
-        Btambah.setText("Tambah");
-        Btambah.addActionListener(new java.awt.event.ActionListener() {
+        bTambah.setText("Tambah");
+        bTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtambahActionPerformed(evt);
+                bTambahActionPerformed(evt);
             }
         });
 
@@ -199,7 +278,7 @@ public class DataInstansi extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(bEdit)
-                            .addComponent(Btambah))
+                            .addComponent(bTambah))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(32, 32, 32))
@@ -216,7 +295,7 @@ public class DataInstansi extends javax.swing.JFrame {
                         .addGap(133, 133, 133)
                         .addComponent(bEdit)
                         .addGap(18, 18, 18)
-                        .addComponent(Btambah)
+                        .addComponent(bTambah)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
@@ -231,80 +310,82 @@ public class DataInstansi extends javax.swing.JFrame {
 
     private void bCancleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancleActionPerformed
         // TODO add your handling code here:
-        tfNama.setText("");
-        tfAlamat.setText("");
-
-        bSimpan.setVisible(false);
-        bCancle.setVisible(false);
+        resetForm();
     }//GEN-LAST:event_bCancleActionPerformed
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
-        int selectedRow = tDataSiswa.getSelectedRow();
+        int selectedRow = tblDataInstansi.getSelectedRow();
+    if (selectedRow >= 0) {
+        int id = Integer.parseInt(tblDataInstansi.getValueAt(selectedRow, 0).toString());
+        String nama = tfNama.getText();
+        String alamat = tfAlamat.getText();
+        String telepon = tfTelepone.getText();
+        int kuota = Integer.parseInt(tfSisaKuota.getText());
 
-        if (selectedRow >= 0) {
-
-            // String nama = tfNama.getText();
-            // String alamat = tfAlamat.getText();
-            //  String nip = tfKelas.getText();
-            //String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
-
-            //DataG data = DataG.getGuru().get(selectedRow);
-            //data.setNama(nama);
-            //data.setAlamat(alamat);
-            // data.setNip(nip);
-            // data.setJenisKelamin(jenisKelamin);
-
-            //tampilDataKeTabel();
-
-        }
-        tfNama.setText("");
-        tfAlamat.setText("");
-       
-       
-
-        bSimpan.setVisible(false);
-        bCancle.setVisible(false);
+        //Model
+        Instansi instansiEdit = new Instansi(kuota, nama, alamat, telepon);
+        instansiEdit.setId(id);
+        
+        //Controller
+        InstansiController.editInstansi(instansiEdit);
+        
+        // Bersihkan form
+        resetForm();
+        
+        tampilDataKeTabel();
+    }
     }//GEN-LAST:event_bSimpanActionPerformed
 
     private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tDataSiswa.getSelectedRow();
+        int selectedRow = tblDataInstansi.getSelectedRow();
 
-        if (selectedRow >= 0) {
+    if (selectedRow >= 0) {
+        // Ambil data dari kolom pada baris yang dipilih
+        int id = (int) tblDataInstansi.getValueAt(selectedRow, 0);
+        String nama = tblDataInstansi.getValueAt(selectedRow, 1).toString();
+        String alamat = tblDataInstansi.getValueAt(selectedRow, 2).toString();
+        String telepon = tblDataInstansi.getValueAt(selectedRow, 3).toString();
+        String kuota = tblDataInstansi.getValueAt(selectedRow, 4).toString();
 
-            DataG guru = DataG.getGuru().get(selectedRow);
+        // Tampilkan ke form
+        tfNama.setText(nama);
+        tfAlamat.setText(alamat);
+        tfTelepone.setText(telepon);
+        tfSisaKuota.setText(kuota);
 
-            //tfNama.setText(guru.getNama());
-            //tfAlamat.setText(guru.getAlamat());
-            //cbJenisKelamin.setSelectedItem(guru.getJenisKelamin());
-            //tfKelas.setText(guru.getNip());
-
-            //bSimpan.setVisible(true);
-            // bCancle.setVisible(true);
-
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
+        // Tampilkan tombol simpan & cancel
+        bSimpan.setVisible(true);
+        bCancle.setVisible(true);
+        
+        // Simpan row index yang diedit ke variable tersembunyi
+        tblDataInstansi.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
+    } else {
+        JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
         }
     }//GEN-LAST:event_bEditActionPerformed
 
-    private void BtambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtambahActionPerformed
+    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
         // TODO add your handling code here:
-        //String nama = tfNama.getText();
-        //String alamat = tfAlamat.getText();
-        // String nip = tfKelas.getText();
-        // String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
+        String nama = tfNama.getText();
+        String alamat = tfAlamat.getText();
+        String telepon = tfTelepone.getText();
+        int kuota = Integer.parseInt(tfSisaKuota.getText());
 
-        // DataG dataBaru = new DataG(nama, alamat, jenisKelamin, nip);
-
-        // DataG.getGuru().add(dataBaru);
-
-        //tampilDataKeTabel();
-
-        //tfNama.setText("");
-        //fAlamat.setText("");
-        //tfKelas.setText("");
-        //bJenisKelamin.setSelectedIndex(0);
-    }//GEN-LAST:event_BtambahActionPerformed
+        if (nama.isEmpty() || alamat.isEmpty() || telepon.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");
+            return;
+        }
+        
+        //MODEL
+        Instansi instansiBaru = new Instansi(kuota, nama, alamat, telepon);
+        
+        //CONTROLLER
+        InstansiController.tambahInstansi(instansiBaru);
+        
+        resetForm();
+        tampilDataKeTabel();
+    }//GEN-LAST:event_bTambahActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -349,10 +430,10 @@ public class DataInstansi extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Btambah;
     private javax.swing.JButton bCancle;
     private javax.swing.JButton bEdit;
     private javax.swing.JButton bSimpan;
+    private javax.swing.JButton bTambah;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -361,7 +442,7 @@ public class DataInstansi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataSiswa;
+    private javax.swing.JTable tblDataInstansi;
     private javax.swing.JTextField tfAlamat;
     private javax.swing.JTextField tfNama;
     private javax.swing.JTextField tfSisaKuota;

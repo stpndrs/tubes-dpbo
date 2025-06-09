@@ -4,7 +4,7 @@
  */
 package ViewGuru;
 
-import ViewAdmin.Data;
+//import ViewAdmin.Data;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,7 +19,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
      */
     public MonotiringForGuru() {
         initComponents();
-         Data.inputan();
+   //      Data.inputan();
         
         
     }

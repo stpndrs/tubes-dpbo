@@ -9,6 +9,8 @@ import DataBase.DBConnection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import Model.Monitoring;
+import java.sql.Connection;
+import java.sql.ResultSet;
 
 public class MonitoringController {
 
@@ -36,14 +38,14 @@ public class MonitoringController {
         }
     }
     
-    public void editMonitoring(int idMonitoring, Monitoring monitoringBaru) {
+    public void editMonitoring(Monitoring monitoringBaru) {
     String query = "UPDATE monitoring SET siswa_id = ?, guru_id = ? WHERE id = ?";
 
     try {
         PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
         stmt.setInt(1, monitoringBaru.getSiswa_id().getId());
         stmt.setInt(2, monitoringBaru.getGuru_id().getId());
-        stmt.setInt(3, idMonitoring);
+        stmt.setInt(3, monitoringBaru.getId());
 
         int rowsUpdated = stmt.executeUpdate();
         if (rowsUpdated > 0) {
@@ -57,4 +59,212 @@ public class MonitoringController {
         System.err.println("Gagal memperbarui monitoring: " + e.getMessage());
     }
 }
+    public String getNamaSiswaById(int id) {
+        String nama = null;
+        try {
+            Connection conn = DBConnection.getConnection(); // gunakan koneksi yang kamu pakai
+            String query = "SELECT nama FROM siswa WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                nama = rs.getString("nama");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nama;
+    }
+    
+    public String getNamaGuruById(int id) {
+        String nama = null;
+        try {
+            Connection conn = DBConnection.getConnection();
+            String query = "SELECT nama FROM guru WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                nama = rs.getString("nama");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nama;
+    }
+    
+    public String getNamaInstansiById(int id) {
+        String nama = null;
+        try {
+            Connection conn = DBConnection.getConnection();
+            String query = "SELECT nama FROM instansi WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                nama = rs.getString("nama");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nama;
+    }
+    
+    public Integer getIdSiswaByMonitoringId(int idMonitoring) {
+        Integer idSiswa = null;
+        try {
+            Connection conn = DBConnection.getConnection();
+            String query = "SELECT id_siswa FROM monitoring WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, idMonitoring);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                idSiswa = rs.getInt("id_siswa");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idSiswa;
+    }
+    
+    public Integer getIdGuruByMonitoringId(int idMonitoring) {
+        Integer idGuru = null;
+        try {
+            Connection conn = DBConnection.getConnection();
+            String query = "SELECT id_guru FROM monitoring WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, idMonitoring);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                idGuru = rs.getInt("id_guru");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idGuru;
+    }
+    
+    public Integer getIdInstansiByMonitoringId(int idMonitoring) {
+        Integer idInstansi = null;
+        try {
+            Connection conn = DBConnection.getConnection();
+            String query = "SELECT id_instansi FROM monitoring WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, idMonitoring);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                idInstansi = rs.getInt("id_instansi");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idInstansi;
+    }
+    
+    //ADMIN
+    public static void updateStatusAdmin(int idMonitoring, int statusBaru) {
+        String updateQuery = "UPDATE monitoring SET status = ? WHERE id = ?";
+        String kuotaQuery = "UPDATE instansi SET kouta = kouta - 1 WHERE id = (" +
+                            "SELECT instansi_id FROM monitoring WHERE id = ?) AND kouta > 0";
+
+        try {
+            PreparedStatement stmtUpdate = DBConnection.getConnection().prepareStatement(updateQuery);
+            stmtUpdate.setInt(1, statusBaru);
+            stmtUpdate.setInt(2, idMonitoring);
+
+            int rowsAffected = stmtUpdate.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Status monitoring ID " + idMonitoring + " berhasil diubah ke status " + statusBaru);
+
+                // Kurangi kuota hanya jika status adalah DITERIMA (1)
+                if (statusBaru == 1) {
+                    PreparedStatement stmtKuota = DBConnection.getConnection().prepareStatement(kuotaQuery);
+                    stmtKuota.setInt(1, idMonitoring);
+
+                    int kuotaAffected = stmtKuota.executeUpdate();
+                    if (kuotaAffected > 0) {
+                        System.out.println("Kuota instansi berhasil dikurangi.");
+                    } else {
+                        System.out.println("Gagal mengurangi kuota: kuota sudah habis atau instansi tidak ditemukan.");
+                    }
+
+                    stmtKuota.close();
+                }
+
+            } else {
+                System.out.println("Monitoring dengan ID " + idMonitoring + " tidak ditemukan.");
+            }
+
+            stmtUpdate.close();
+        } catch (SQLException e) {
+            System.err.println("Gagal mengubah status: " + e.getMessage());
+        }
+    }
+    
+    public static int getSiswaIdByMonitoringId(int monitoringId) {
+        String query = "SELECT siswa_id FROM monitoring WHERE id = ?";
+        try (var conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, monitoringId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("siswa_id");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Gagal mengambil siswa_id: " + e.getMessage());
+        }
+        return -1; // Jika tidak ditemukan
+    }
+    
+    public static int getGuruIdByMonitoringId(int monitoringId) {
+        String query = "SELECT guru_id FROM monitoring WHERE id = ?";
+        try (var conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, monitoringId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("guru_id");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Gagal mengambil guru_id: " + e.getMessage());
+        }
+        return -1;
+    }
+    
+    public static int getInstansiIdByMonitoringId(int monitoringId) {
+        String query = "SELECT instansi_id FROM monitoring WHERE id = ?";
+        try (var conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, monitoringId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("instansi_id");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Gagal mengambil instansi_id: " + e.getMessage());
+        }
+        return -1;
+    }
 }

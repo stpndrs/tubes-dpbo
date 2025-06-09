@@ -8,7 +8,6 @@ ViewGUi\MelihatPresensiKegiatan$8.class
 ViewGuru\MonotiringForGuru$4.class
 ViewGUi\MelihatPresensiKegiatan.class
 View\InputEditGuru.class
-ViewAdmin\DataMonitoring$11.class
 ViewGuru\DetailPresensi.class
 ViewAdmin\DataPenguna$6.class
 ViewGUi\MainMenu$Siswa.class
@@ -16,6 +15,7 @@ ViewGuru\Laporan$3.class
 ViewAdmin\DataGuru$9.class
 ViewAdmin\DashBoard$3.class
 View\InputUser.class
+ViewAdmin\DataPenguna$9.class
 ViewGuru\DetailPresensi$1.class
 ViewAdmin\DataMonitoring$4.class
 MissionUtil\Util.class
@@ -34,9 +34,7 @@ Controller\MonitoringController.class
 ViewAdmin\DataSiswa$4.class
 ViewGUi\presensiDanKegiatan$2.class
 ViewAdmin\DataSiswa$1.class
-ViewAdmin\Monitoring.class
 ViewAdmin\DataMonitoring.class
-ViewAdmin\Siswa.class
 ViewInstansi\DetailPerensiDanKegiatan$1.class
 ViewAdmin\DashBoard$2.class
 ViewAdmin\DataInstansi$3.class
@@ -48,7 +46,6 @@ ViewAdmin\DataMonitoring$1.class
 View\InputGuru.class
 ViewGUi\LoginView.class
 ViewAdmin\DataGuru.class
-ViewAdmin\DataMonitoring$9.class
 ViewAdmin\DataPenguna$4.class
 ViewAdmin\DataSiswa$5.class
 View\inputMonitoring.class
@@ -117,12 +114,10 @@ ViewGUi\LoginView$3.class
 ViewGUi\MainMenu.class
 ViewGUi\MelihatPresensiKegiatan$3.class
 ViewAdmin\DataPenguna$2.class
-ViewAdmin\DataG.class
 ViewAdmin\DataGuru$8.class
 ViewAdmin\DataInstansi.class
 ViewAdmin\DataSiswa$2.class
 ViewAdmin\DataGuru$1.class
-ViewAdmin\Data.class
 ViewAdmin\DashBoard$6.class
 ViewGUi\MelihatPresensiKegiatan$2.class
 View\InpuEditSiswa.class
@@ -136,5 +131,4 @@ View\InputInstansi.class
 ViewGuru\MonotiringForGuru.class
 ViewInstansi\MonitoringForInstansi$2.class
 ViewAdmin\DataSiswa$9.class
-ViewAdmin\DataMonitoring$10.class
 ViewAdmin\DataMonitoring$5.class

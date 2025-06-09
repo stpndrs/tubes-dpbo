@@ -77,6 +77,27 @@ public class UserController {
         }
     }
     
+    public static boolean gantiPasswordAdmin(int userId, String passwordBaru) {
+    String queryUpdate = "UPDATE user SET password = ? WHERE id = ?";
+
+    try (var conn = DBConnection.getConnection();
+         PreparedStatement stmtUpdate = conn.prepareStatement(queryUpdate)) {
+
+        // Hash password baru
+        String hashedBaru = BCrypt.hashpw(passwordBaru, BCrypt.gensalt());
+
+        stmtUpdate.setString(1, hashedBaru);
+        stmtUpdate.setInt(2, userId);
+        int rowsUpdated = stmtUpdate.executeUpdate();
+
+        return rowsUpdated > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Gagal mengganti password oleh admin: " + e.getMessage());
+        return false;
+        }
+    }
+    
     public static void editUser(User user) {
     String query = "UPDATE User SET nama = ?, username = ?, role = ? WHERE id = ?";
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author Pongo
  */
 public class Monitoring {
-    private int id;
+    private int id, status;
     private Siswa siswa_id;
     private Instansi instansi_id;
     private Guru guru_id;
@@ -73,5 +73,13 @@ public class Monitoring {
 
     public void setTanggal_selesai(String tanggal_selesai) {
         this.tanggal_selesai = tanggal_selesai;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

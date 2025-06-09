@@ -23,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
@@ -31,7 +31,7 @@
                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="bEdit" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="Btambah" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="bTambah" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
@@ -59,14 +59,14 @@
                       <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
                       <Component id="bEdit" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="Btambah" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="268" max="-2" attributes="0"/>
+                      <Component id="bTambah" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="337" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace pref="55" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel3" max="32767" attributes="0"/>
-                          <Component id="jScrollPane1" pref="479" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="528" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -109,11 +109,11 @@
                       </Group>
                   </Group>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="tfNama" alignment="0" max="32767" attributes="0"/>
+                      <Component id="tfNama" alignment="0" pref="318" max="32767" attributes="0"/>
                       <Component id="tfAlamat" alignment="0" max="32767" attributes="0"/>
                       <Component id="tfKelas" alignment="0" max="32767" attributes="0"/>
-                      <Component id="cbJenisKelamin" alignment="0" pref="318" max="32767" attributes="0"/>
-                      <Component id="tfAlamat1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="tfNisn" alignment="0" max="32767" attributes="0"/>
+                      <Component id="cbJenisKelamin" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="26" max="32767" attributes="0"/>
               </Group>
@@ -142,7 +142,7 @@
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="tfAlamat1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfNisn" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -159,7 +159,7 @@
                       <Component id="bCancle" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="bSimpan" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="239" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -206,23 +206,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfKelasActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cbJenisKelamin">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="Laki-Laki"/>
-                <StringItem index="1" value="Perempuan"/>
-              </StringArray>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbJenisKelaminActionPerformed"/>
-          </Events>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JButton" name="bCancle">
           <Properties>
             <Property name="text" type="java.lang.String" value="cancle"/>
@@ -248,7 +231,23 @@
             <Property name="text" type="java.lang.String" value="Nisn :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="tfAlamat1">
+        <Component class="javax.swing.JTextField" name="tfNisn">
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbJenisKelamin">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="2">
+                <StringItem index="0" value="1 Laki-Laki"/>
+                <StringItem index="1" value="2 Prempuan"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbJenisKelaminActionPerformed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
@@ -259,15 +258,16 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="tDataSiswa">
+        <Component class="javax.swing.JTable" name="tblDataSiswa">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="5" rowCount="5">
-                <Column editable="false" title="Nama" type="java.lang.Object"/>
-                <Column editable="false" title="Alamat" type="java.lang.Object"/>
-                <Column editable="false" title="NISN" type="java.lang.Object"/>
-                <Column editable="false" title="Jenis kelmamin" type="java.lang.Object"/>
-                <Column editable="false" title="Kelas" type="java.lang.Object"/>
+              <Table columnCount="6" rowCount="5">
+                <Column editable="false" title="Id" type="java.lang.Integer"/>
+                <Column editable="true" title="Nama" type="java.lang.String"/>
+                <Column editable="true" title="Alamat" type="java.lang.String"/>
+                <Column editable="true" title="NISN" type="java.lang.String"/>
+                <Column editable="true" title="Jenis kelmamin" type="java.lang.Integer"/>
+                <Column editable="true" title="Kelas" type="java.lang.String"/>
               </Table>
             </Property>
           </Properties>
@@ -290,12 +290,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bEditActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="Btambah">
+    <Component class="javax.swing.JButton" name="bTambah">
       <Properties>
         <Property name="text" type="java.lang.String" value="Tambah"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtambahActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bTambahActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">

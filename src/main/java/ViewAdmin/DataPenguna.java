@@ -4,19 +4,89 @@
  */
 package ViewAdmin;
 
-import ViewAdmin.DataG;
+import Controller.UserController;
+import DataBase.DBConnection;
+import Model.User;
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
 
 /**
  *
  * @author Axioo Pongo
  */
 public class DataPenguna extends javax.swing.JFrame {
-
+    
+    private UserController controller;
     /**
      * Creates new form DataPenguna
      */
     public DataPenguna() {
-        initComponents();
+        super("Data User");
+            initComponents();
+            controller = new UserController();
+            tblDataUser.getSelectionModel().addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting() && tblDataUser.getSelectedRow() != -1) {
+                    int row = tblDataUser.getSelectedRow();
+
+                    tfNama.setText(tblDataUser.getValueAt(row, 1).toString());
+                    tfUsername.setText(tblDataUser.getValueAt(row, 2).toString());
+                    cbRole.setSelectedItem(tblDataUser.getValueAt(row, 3).toString());
+
+                    // Nonaktifkan tombol Tambah
+                    bTambah.setEnabled(false);
+
+                    // Aktifkan tombol Edit dan Hapus
+                    bEdit.setEnabled(true);
+                    bCancle.setEnabled(true);
+                }
+            });
+            tampilDataKeTabel();  
+    }
+            
+    private void tampilDataKeTabel() {
+        DefaultTableModel model = (DefaultTableModel) tblDataUser.getModel();
+        model.setRowCount(0); // Bersihkan tabel sebelum isi
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM user"; 
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nama = rs.getString("nama");
+                String username = rs.getString("username");
+                int role = rs.getInt("role");
+
+                model.addRow(new Object[]{id, nama, username, role});
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+        }
+    }
+    
+    private void resetForm() {
+        tfNama.setText("");
+        tfUsername.setText("");
+        cbRole.setSelectedIndex(0);
+
+        tblDataUser.clearSelection(); // hapus seleksi di tabel
+
+        // Tombol kembali ke default
+        bTambah.setEnabled(true);
+        bEdit.setEnabled(false);
+        bSimpan.setVisible(false);
+        bCancle.setVisible(false);
     }
 
     /**
@@ -29,24 +99,26 @@ public class DataPenguna extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tDataSiswa = new javax.swing.JTable();
+        tblDataUser = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         tfNama = new javax.swing.JTextField();
-        tfAlamat = new javax.swing.JTextField();
+        tfUsername = new javax.swing.JTextField();
         bCancle = new javax.swing.JButton();
         bSimpan = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         cbRole = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        pfPassword = new javax.swing.JPasswordField();
         bEdit = new javax.swing.JButton();
-        Btambah = new javax.swing.JButton();
+        bTambah = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tDataSiswa.setModel(new javax.swing.table.DefaultTableModel(
+        tblDataUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -55,18 +127,18 @@ public class DataPenguna extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Nama", "Username", "Role", "sisa kuota"
+                "id", "Nama", "Username", "Role"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                true, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tDataSiswa);
+        jScrollPane1.setViewportView(tblDataUser);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Manajement Data Penguna");
@@ -97,11 +169,20 @@ public class DataPenguna extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Role :");
 
-        cbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Guru", "Siswa", "Instansi" }));
+        cbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1. Admin", "2. Siswa", "3. Guru", "4. Instansi" }));
         cbRole.setToolTipText("");
         cbRole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbRoleActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setText("Password : ");
+
+        pfPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pfPasswordActionPerformed(evt);
             }
         });
 
@@ -110,28 +191,30 @@ public class DataPenguna extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47))
+                .addGap(19, 19, 19)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
+                        .addComponent(bCancle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bSimpan))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(39, 39, 39)))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfNama, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                    .addComponent(tfAlamat)
-                    .addComponent(cbRole, javax.swing.GroupLayout.Alignment.TRAILING, 0, 318, Short.MAX_VALUE))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tfNama, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                                    .addComponent(tfUsername)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbRole, 0, 318, Short.MAX_VALUE)
+                                    .addComponent(pfPassword))))))
                 .addContainerGap(26, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(bCancle)
-                .addGap(18, 18, 18)
-                .addComponent(bSimpan)
-                .addGap(33, 33, 33))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,15 +226,16 @@ public class DataPenguna extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(tfAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel6))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bCancle)
                     .addComponent(bSimpan))
@@ -165,10 +249,10 @@ public class DataPenguna extends javax.swing.JFrame {
             }
         });
 
-        Btambah.setText("Tambah");
-        Btambah.addActionListener(new java.awt.event.ActionListener() {
+        bTambah.setText("Tambah");
+        bTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtambahActionPerformed(evt);
+                bTambahActionPerformed(evt);
             }
         });
 
@@ -195,7 +279,7 @@ public class DataPenguna extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(bEdit)
-                            .addComponent(Btambah))
+                            .addComponent(bTambah))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(32, 32, 32))
@@ -212,7 +296,7 @@ public class DataPenguna extends javax.swing.JFrame {
                         .addGap(133, 133, 133)
                         .addComponent(bEdit)
                         .addGap(18, 18, 18)
-                        .addComponent(Btambah)
+                        .addComponent(bTambah)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
@@ -227,80 +311,87 @@ public class DataPenguna extends javax.swing.JFrame {
 
     private void bCancleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancleActionPerformed
         // TODO add your handling code here:
-        tfNama.setText("");
-        tfAlamat.setText("");
-       
-        bSimpan.setVisible(false);
-        bCancle.setVisible(false);
+        resetForm();
     }//GEN-LAST:event_bCancleActionPerformed
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
-        int selectedRow = tDataSiswa.getSelectedRow();
-
+        int selectedRow = tblDataUser.getSelectedRow();
         if (selectedRow >= 0) {
+            int id = Integer.parseInt(tblDataUser.getValueAt(selectedRow, 0).toString());
+            String nama = tfNama.getText();
+            String username = tfUsername.getText();
+            int role = cbRole.getSelectedIndex();
+            
+            char[] passwordChars = pfPassword.getPassword();
+            String password = new String(passwordChars);
+            boolean chek = passwordChars.length > 0;
 
-            // String nama = tfNama.getText();
-            // String alamat = tfAlamat.getText();
-            //  String nip = tfKelas.getText();
-            //String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
+            //Model
+            User userEdit = new User(nama, username, password, role);
+            userEdit.setId(id);
+            
+            //COntroller
+            UserController.editUser(userEdit);
+            
+            if(chek){
+                UserController.gantiPasswordAdmin(id, password);
+            }
 
-            //DataG data = DataG.getGuru().get(selectedRow);
-            //data.setNama(nama);
-            //data.setAlamat(alamat);
-            // data.setNip(nip);
-            // data.setJenisKelamin(jenisKelamin);
+            // Bersihkan form
+            resetForm();
 
-            //tampilDataKeTabel();
-
+            tampilDataKeTabel();
         }
-        tfNama.setText("");
-        tfAlamat.setText("");
-        
-        cbRole.setSelectedIndex(0);
-
-        bSimpan.setVisible(false);
-        bCancle.setVisible(false);
     }//GEN-LAST:event_bSimpanActionPerformed
 
     private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tDataSiswa.getSelectedRow();
+        int selectedRow = tblDataUser.getSelectedRow();
 
         if (selectedRow >= 0) {
+            // Ambil data dari kolom pada baris yang dipilih
+            int id = (int) tblDataUser.getValueAt(selectedRow, 0);
+            String nama = tblDataUser.getValueAt(selectedRow, 1).toString();
+            String username = tblDataUser.getValueAt(selectedRow, 2).toString();
+            String role = tblDataUser.getValueAt(selectedRow, 3).toString();
 
-            DataG guru = DataG.getGuru().get(selectedRow);
+            // Tampilkan ke form
+            tfNama.setText(nama);
+            tfUsername.setText(username);
+            cbRole.setSelectedItem(role);
 
-            //tfNama.setText(guru.getNama());
-            //tfAlamat.setText(guru.getAlamat());
-            //cbJenisKelamin.setSelectedItem(guru.getJenisKelamin());
-            //tfKelas.setText(guru.getNip());
+            // Tampilkan tombol simpan & cancel
+            bSimpan.setVisible(true);
+            bCancle.setVisible(true);
 
-            //bSimpan.setVisible(true);
-            // bCancle.setVisible(true);
-
+            // Simpan row index yang diedit ke variable tersembunyi
+            tblDataUser.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
+            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
         }
+
     }//GEN-LAST:event_bEditActionPerformed
 
-    private void BtambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtambahActionPerformed
+    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
         // TODO add your handling code here:
-        //String nama = tfNama.getText();
-        //String alamat = tfAlamat.getText();
-        // String nip = tfKelas.getText();
-        // String jenisKelamin = cbJenisKelamin.getSelectedItem().toString();
+        String nama = tfNama.getText();
+        String username = tfUsername.getText();
+        int role = cbRole.getSelectedIndex();
+        
+        char[] passwordChars = pfPassword.getPassword();
+        String password = new String(passwordChars);
 
-        // DataG dataBaru = new DataG(nama, alamat, jenisKelamin, nip);
+        //Model
+        User userTambah = new User(nama, username, password, role);
+            
+        //COntroller
+        UserController.tambahUser(userTambah);
 
-        // DataG.getGuru().add(dataBaru);
+        // Bersihkan form
+        resetForm();
 
-        //tampilDataKeTabel();
-
-        //tfNama.setText("");
-        //fAlamat.setText("");
-        //tfKelas.setText("");
-        //bJenisKelamin.setSelectedIndex(0);
-    }//GEN-LAST:event_BtambahActionPerformed
+        tampilDataKeTabel();
+    }//GEN-LAST:event_bTambahActionPerformed
 
     private void cbRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRoleActionPerformed
         // TODO add your handling code here:
@@ -312,6 +403,10 @@ public class DataPenguna extends javax.swing.JFrame {
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void pfPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pfPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pfPasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -349,20 +444,22 @@ public class DataPenguna extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Btambah;
     private javax.swing.JButton bCancle;
     private javax.swing.JButton bEdit;
     private javax.swing.JButton bSimpan;
+    private javax.swing.JButton bTambah;
     private javax.swing.JComboBox<String> cbRole;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataSiswa;
-    private javax.swing.JTextField tfAlamat;
+    private javax.swing.JPasswordField pfPassword;
+    private javax.swing.JTable tblDataUser;
     private javax.swing.JTextField tfNama;
+    private javax.swing.JTextField tfUsername;
     // End of variables declaration//GEN-END:variables
 }
