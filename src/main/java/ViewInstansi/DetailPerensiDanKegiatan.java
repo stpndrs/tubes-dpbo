@@ -4,17 +4,73 @@
  */
 package ViewInstansi;
 
+import DataBase.DBConnection;
+import Controller.PresensiController;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
 /**
  *
  * @author Axioo Pongo
  */
 public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
-
+    
+    private PresensiController controller;
+    private static int SiswaId = 0;
+    
     /**
      * Creates new form DetailPerensiDanKegiatan
      */
-    public DetailPerensiDanKegiatan() {
+    public DetailPerensiDanKegiatan(int SiswaId) {
         initComponents();
+        tampilDataPresensi(SiswaId);
+        this.controller = new PresensiController();
+    }
+    
+    private void tampilDataPresensi(int siswaId) {
+        DefaultTableModel model = (DefaultTableModel) tblPresensi.getModel();
+        model.setRowCount(0); // Kosongkan tabel sebelum isi ulang
+
+        String sql = "SELECT s.nama AS nama_siswa, s.nisn, i.nama AS nama_instansi, " +
+                     "p.tanggal, p.jam_masuk, p.jam_keluar, p.status, p.keterangan " +
+                     "FROM presensi p " +
+                     "JOIN monitoring m ON p.monitoring_id = m.id " +
+                     "JOIN siswa s ON m.siswa_id = s.id " +
+                     "JOIN instansi i ON m.instansi_id = i.id " +
+                     "WHERE s.id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, siswaId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String tanggal = rs.getString("tanggal");
+                String jamMasuk = rs.getString("jam_masuk");
+                String jamKeluar = rs.getString("jam_keluar");
+                int nmrStatus = rs.getInt("status");
+                String keterangan = rs.getString("keterangan");
+                
+                tfNama.setText(rs.getString("nama_siswa"));
+                tfNisn.setText(rs.getString("nisn"));
+                tfGuru.setText(rs.getString("nama_instansi"));
+                
+                String status =controller.statusPresensi(nmrStatus);
+
+                if(jamKeluar == null){
+                    jamKeluar = "-";
+                }
+
+                model.addRow(new Object[]{tanggal, jamMasuk, jamKeluar, status, keterangan});
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data presensi: " + e.getMessage());
+        }
     }
 
     /**
@@ -28,48 +84,63 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
 
         jLabel4 = new javax.swing.JLabel();
         tfNama = new javax.swing.JTextField();
-        tfTelepon = new javax.swing.JTextField();
-        tfInstansiPkl = new javax.swing.JTextField();
+        tfNisn = new javax.swing.JTextField();
+        tfGuru = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tDataMonitoring = new javax.swing.JTable();
+        tblPresensi = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        bExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("intansi PKL :");
+        jLabel4.setText("Guru : ");
 
-        tDataMonitoring.setModel(new javax.swing.table.DefaultTableModel(
+        tblPresensi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Tanggal", "jam masuk", "Status Laporan", "Jam masuk"
+                "Tanggal", "Jam Masuk", "Jam Keluar", "Status", "Keterangan"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tDataMonitoring);
+        jScrollPane1.setViewportView(tblPresensi);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Detail presensi dan kegiatan");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("nama :");
+        jLabel2.setText("Nama :");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("Telepon");
+        jLabel3.setText("NISN :");
+
+        bExit.setText("exit");
+        bExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bExitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,28 +152,29 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(tfInstansiPkl))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3))
-                                    .addGap(53, 53, 53)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(tfTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(tfNama, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(440, 440, 440))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))
+                                .addGap(42, 42, 42)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tfGuru, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfNisn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfNama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(348, 348, 348)
+                        .addComponent(bExit)
+                        .addGap(11, 11, 11))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 769, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(394, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bExit, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -110,11 +182,11 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(tfTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfNisn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(tfInstansiPkl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfGuru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -122,6 +194,13 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bExitActionPerformed
+        // TODO add your handling code here:
+        MonitoringForInstansi guru = new MonitoringForInstansi();
+        guru.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_bExitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -153,20 +232,22 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DetailPerensiDanKegiatan().setVisible(true);
+                DetailPerensiDanKegiatan p = new DetailPerensiDanKegiatan(SiswaId);
+                p.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bExit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataMonitoring;
-    private javax.swing.JTextField tfInstansiPkl;
+    private javax.swing.JTable tblPresensi;
+    private javax.swing.JTextField tfGuru;
     private javax.swing.JTextField tfNama;
-    private javax.swing.JTextField tfTelepon;
+    private javax.swing.JTextField tfNisn;
     // End of variables declaration//GEN-END:variables
 }

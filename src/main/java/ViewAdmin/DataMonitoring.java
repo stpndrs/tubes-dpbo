@@ -35,7 +35,7 @@ public class DataMonitoring extends javax.swing.JFrame {
                     tfNama.setText(tblDataMonitoring.getValueAt(row, 1).toString());
                     tfMulai.setText(tblDataMonitoring.getValueAt(row, 2).toString());
                     tfSelesai.setText(tblDataMonitoring.getValueAt(row, 3).toString());
-                    cbStatus.setSelectedItem(nmrStatus);
+                    cbStatus.setSelectedIndex(nmrStatus);
                     tfInstansi.setText(tblDataMonitoring.getValueAt(row, 5).toString());
                     tfGUru.setText(tblDataMonitoring.getValueAt(row, 6).toString());
 

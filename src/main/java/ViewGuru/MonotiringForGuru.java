@@ -4,10 +4,10 @@
  */
 package ViewGuru;
 
-import Controller.SiswaController;
 import DataBase.DBConnection;
 import Controller.MonitoringController;
 import Session.Session;
+import ViewGUi.LoginView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -32,19 +32,19 @@ public class MonotiringForGuru extends javax.swing.JFrame {
         initComponents(); 
         int guruId = Session.getId_guru();
         
-        tblMonitoringGuru.getSelectionModel().addListSelectionListener(e -> {
-                if (!e.getValueIsAdjusting() && tblMonitoringGuru.getSelectedRow() != -1) {
-                    int row = tblMonitoringGuru.getSelectedRow();
-                    String nisn = tblMonitoringGuru.getValueAt(row, 1).toString();
-                    SiswaId = MonitoringController.getIdSiswaByNisn(nisn);
-                }
-            });
+        tblMonitoring.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tblMonitoring.getSelectedRow() != -1) {
+                int row = tblMonitoring.getSelectedRow();
+                String nisn = tblMonitoring.getValueAt(row, 1).toString();
+                SiswaId = MonitoringController.getIdSiswaByNisn(nisn);
+            }
+        });
         
         tampilDataKeTabel(guruId);
     }
     
     private void tampilDataKeTabel(int guruId) {
-        DefaultTableModel model = (DefaultTableModel) tblMonitoringGuru.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblMonitoring.getModel();
         model.setRowCount(0); // Bersihkan tabel sebelum isi
 
         String sql = "SELECT s.id, s.nama, s.nisn, s.kelas, m.tanggal_mulai, m.tanggal_selesai, i.nama AS nama_instansi " +
@@ -93,8 +93,9 @@ public class MonotiringForGuru extends javax.swing.JFrame {
 
         bLihatPresensi = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblMonitoringGuru = new javax.swing.JTable();
+        tblMonitoring = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,7 +106,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
             }
         });
 
-        tblMonitoringGuru.setModel(new javax.swing.table.DefaultTableModel(
+        tblMonitoring.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -124,19 +125,26 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblMonitoringGuru.addAncestorListener(new javax.swing.event.AncestorListener() {
+        tblMonitoring.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                tblMonitoringGuruAncestorAdded(evt);
+                tblMonitoringAncestorAdded(evt);
             }
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
-        jScrollPane1.setViewportView(tblMonitoringGuru);
+        jScrollPane1.setViewportView(tblMonitoring);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Data Monitoring");
+
+        jButton1.setText("Logout");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -150,7 +158,9 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                         .addGap(0, 726, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
-                .addComponent(bLihatPresensi, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(bLihatPresensi, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(85, 85, 85))
         );
         layout.setVerticalGroup(
@@ -164,7 +174,9 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bLihatPresensi)
-                        .addGap(281, 281, 281))))
+                        .addGap(226, 226, 226)
+                        .addComponent(jButton1)
+                        .addGap(32, 32, 32))))
         );
 
         pack();
@@ -175,14 +187,21 @@ public class MonotiringForGuru extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_bLihatPresensiActionPerformed
 
-    private void tblMonitoringGuruAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tblMonitoringGuruAncestorAdded
+    private void tblMonitoringAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tblMonitoringAncestorAdded
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tblMonitoringGuru.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblMonitoring.getModel();
 
         Object[] rowData = new Object[4];
 
         model.addRow(rowData);
-    }//GEN-LAST:event_tblMonitoringGuruAncestorAdded
+    }//GEN-LAST:event_tblMonitoringAncestorAdded
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Session.clear();
+        new LoginView().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -221,8 +240,9 @@ public class MonotiringForGuru extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bLihatPresensi;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblMonitoringGuru;
+    private javax.swing.JTable tblMonitoring;
     // End of variables declaration//GEN-END:variables
 }

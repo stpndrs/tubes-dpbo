@@ -4,22 +4,78 @@
  */
 package ViewInstansi;
 
-import javax.swing.JOptionPane;
+import DataBase.DBConnection;
+import Controller.MonitoringController;
+import Session.Session;
+import ViewGUi.LoginView;
+
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
 
 /**
  *
  * @author Axioo Pongo
  */
 public class MonitoringForInstansi extends javax.swing.JFrame {
-
+    
+    private Session session;
+    private MonitoringController controller;
+    private int SiswaId;
     /**
      * Creates new form MonitoringForInstansi
      */
     public MonitoringForInstansi() {
         initComponents();
+        int instansiId = Session.getId_instansi();
+        
+        tblMonitoring.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tblMonitoring.getSelectedRow() != -1) {
+                int row = tblMonitoring.getSelectedRow();
+                String nisn = tblMonitoring.getValueAt(row, 1).toString();
+                SiswaId = MonitoringController.getIdSiswaByNisn(nisn);
+            }
+        });
+        
+        tampilDataKeTabel(instansiId);
     }
+    
+    private void tampilDataKeTabel(int instansiId) {
+    DefaultTableModel model = (DefaultTableModel) tblMonitoring.getModel();
+    model.setRowCount(0); // Bersihkan tabel sebelum isi
 
+    String sql = "SELECT s.id, s.nama, s.nisn, s.kelas, m.tanggal_mulai, m.tanggal_selesai " +
+                 "FROM monitoring m " +
+                 "JOIN siswa s ON m.siswa_id = s.id " +
+                 "JOIN instansi i ON m.instansi_id = i.id " +
+                 "WHERE m.instansi_id = ?";
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, instansiId);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String nama = rs.getString("nama");
+            String nisn = rs.getString("nisn");
+            String kelas = rs.getString("kelas");
+            String tanggal_mulai = rs.getString("tanggal_mulai");
+            String tanggal_selesai = rs.getString("tanggal_selesai");
+            SiswaId = rs.getInt("id");
+
+            if (tanggal_mulai == null) tanggal_mulai = "-";
+            if (tanggal_selesai == null) tanggal_selesai = "-";
+
+            model.addRow(new Object[]{nama, nisn, kelas, tanggal_mulai, tanggal_selesai});
+        }
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,19 +87,20 @@ public class MonitoringForInstansi extends javax.swing.JFrame {
 
         bLihatPresensi = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tDataMonitoring = new javax.swing.JTable();
+        tblMonitoring = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        bLihatPresensi.setText("Lihat presensi dan kegiatan");
+        bLihatPresensi.setText("Lihat presensi");
         bLihatPresensi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bLihatPresensiActionPerformed(evt);
             }
         });
 
-        tDataMonitoring.setModel(new javax.swing.table.DefaultTableModel(
+        tblMonitoring.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -51,30 +108,37 @@ public class MonitoringForInstansi extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Nama ", "Nisn", "Kelas", "Bulan Mulai / tanggal selesai", "Instansi"
+                "Nama ", "Nisn", "Kelas", "Tanggal Mulai", "Tanggal Selesai"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tDataMonitoring.addAncestorListener(new javax.swing.event.AncestorListener() {
+        tblMonitoring.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                tDataMonitoringAncestorAdded(evt);
+                tblMonitoringAncestorAdded(evt);
             }
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
-        jScrollPane1.setViewportView(tDataMonitoring);
+        jScrollPane1.setViewportView(tblMonitoring);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Data Monitoring");
+
+        jButton1.setText("Logout");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -84,25 +148,30 @@ public class MonitoringForInstansi extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 978, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(bLihatPresensi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(38, 38, 38))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 702, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addGap(18, 18, 18)
-                .addComponent(bLihatPresensi)
-                .addGap(38, 38, 38))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bLihatPresensi)
-                        .addGap(291, 291, 291))))
+                        .addGap(246, 246, 246)
+                        .addComponent(jButton1)
+                        .addGap(22, 22, 22))))
         );
 
         pack();
@@ -110,27 +179,25 @@ public class MonitoringForInstansi extends javax.swing.JFrame {
 
     private void bLihatPresensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLihatPresensiActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tDataMonitoring.getSelectedRow();
-        if (selectedRow != -1) {
-            String nama = tDataMonitoring.getValueAt(selectedRow, 0).toString();
-            String nisn = tDataMonitoring.getValueAt(selectedRow, 1).toString();
-            String instansi = tDataMonitoring.getValueAt(selectedRow, 2).toString();
-
-           // DetailPresensi dp = new DetailPresensi(nama, nisn, instansi);
-           //dp.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Silakan pilih baris data terlebih dahulu.");
-        }
+        new DetailPerensiDanKegiatan(SiswaId).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_bLihatPresensiActionPerformed
 
-    private void tDataMonitoringAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tDataMonitoringAncestorAdded
+    private void tblMonitoringAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tblMonitoringAncestorAdded
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tDataMonitoring.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblMonitoring.getModel();
 
         Object[] rowData = new Object[4];
 
         model.addRow(rowData);
-    }//GEN-LAST:event_tDataMonitoringAncestorAdded
+    }//GEN-LAST:event_tblMonitoringAncestorAdded
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Session.clear();
+        new LoginView().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,8 +236,9 @@ public class MonitoringForInstansi extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bLihatPresensi;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataMonitoring;
+    private javax.swing.JTable tblMonitoring;
     // End of variables declaration//GEN-END:variables
 }

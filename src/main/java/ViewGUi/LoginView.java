@@ -5,6 +5,7 @@
 package ViewGUi;
 
 import ViewGuru.MonotiringForGuru;
+import ViewInstansi.MonitoringForInstansi;
 import Login.AuthService;
 import Session.Session;
 import ViewAdmin.DashBoard;
@@ -153,6 +154,7 @@ public class LoginView extends javax.swing.JFrame {
             this.dispose();
         }
         if(role==2){
+            Session.sessionSiswa();
             
         }
         if(role==3){
@@ -162,7 +164,10 @@ public class LoginView extends javax.swing.JFrame {
             this.dispose();
         }
         if(role==4){
-            
+            Session.sessionInstansi();
+            MonitoringForInstansi guru = new MonitoringForInstansi();
+            guru.setVisible(true);
+            this.dispose();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

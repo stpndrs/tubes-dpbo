@@ -213,19 +213,30 @@ public class Session {
     
     public static void clear() {
         id_user = 0;
+        nama = null;
         username = null;
+        password = null;
         role = 0;
 
-        nama = null;
-        
+        // Siswa
         id_siswa = 0;
         nisn = null;
+        alamat_siswa = null;
+        jenis_kelamin_siswa = 0;
+        kelas = null;
 
+        // Guru
         id_guru = 0;
         nip = null;
-        
+        alamat_guru = null;
+        jenis_kelamin_guru = 0;
+
+        // Instansi
         id_instansi = 0;
         nama_instansi = null;
+        alamat_instansi = null;
+        telepon = null;
+        kuota = 0;
     }
 }
 
