@@ -15,15 +15,14 @@ import java.sql.ResultSet;
 public class MonitoringController {
 
     public void tambahMonitoring(Monitoring monitoring) {
-        //inputMonitoring input = new inputMonitoring();
-        //Monitoring monitoring = input.inputDataMonitoring();
 
-        String query = "INSERT INTO monitoring (siswa_id, guru_id) VALUES (?, ?)";
+        String query = "INSERT INTO monitoring (siswa_id, guru_id, instansi_id) VALUES (?, ?, ?)";
 
         try {
             PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
-            stmt.setInt(1, monitoring.getSiswa_id().getId());
-            stmt.setInt(2, monitoring.getGuru_id().getId());
+            stmt.setInt(1, monitoring.getSiswa_id());
+            stmt.setInt(2, monitoring.getGuru_id());
+            stmt.setInt(3, monitoring.getIsntansi_id());
 
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
@@ -39,13 +38,14 @@ public class MonitoringController {
     }
     
     public void editMonitoring(Monitoring monitoringBaru) {
-    String query = "UPDATE monitoring SET siswa_id = ?, guru_id = ? WHERE id = ?";
+    String query = "UPDATE monitoring SET siswa_id = ?, guru_id = ?, instansi_id = ? WHERE id = ?";
 
     try {
         PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
-        stmt.setInt(1, monitoringBaru.getSiswa_id().getId());
-        stmt.setInt(2, monitoringBaru.getGuru_id().getId());
-        stmt.setInt(3, monitoringBaru.getId());
+        stmt.setInt(1, monitoringBaru.getSiswa_id());
+        stmt.setInt(2, monitoringBaru.getGuru_id());
+        stmt.setInt(3, monitoringBaru.getIsntansi_id());
+        stmt.setInt(4, monitoringBaru.getId());
 
         int rowsUpdated = stmt.executeUpdate();
         if (rowsUpdated > 0) {
@@ -176,8 +176,8 @@ public class MonitoringController {
     //ADMIN
     public static void updateStatusAdmin(int idMonitoring, int statusBaru) {
         String updateQuery = "UPDATE monitoring SET status = ? WHERE id = ?";
-        String kuotaQuery = "UPDATE instansi SET kouta = kouta - 1 WHERE id = (" +
-                            "SELECT instansi_id FROM monitoring WHERE id = ?) AND kouta > 0";
+        String kuotaQuery = "UPDATE instansi SET kuota = kuota - 1 WHERE id = (" +
+                            "SELECT instansi_id FROM monitoring WHERE id = ?) AND kuota > 0";
 
         try {
             PreparedStatement stmtUpdate = DBConnection.getConnection().prepareStatement(updateQuery);
@@ -207,7 +207,6 @@ public class MonitoringController {
             } else {
                 System.out.println("Monitoring dengan ID " + idMonitoring + " tidak ditemukan.");
             }
-
             stmtUpdate.close();
         } catch (SQLException e) {
             System.err.println("Gagal mengubah status: " + e.getMessage());

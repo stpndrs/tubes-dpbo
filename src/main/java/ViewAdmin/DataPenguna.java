@@ -382,7 +382,12 @@ public class DataPenguna extends javax.swing.JFrame {
         
         char[] passwordChars = pfPassword.getPassword();
         String password = new String(passwordChars);
-
+        
+        if(password == null || username == null){
+            JOptionPane.showMessageDialog(this, "Usernam atau password tidak boleh kosong");
+            return;
+        }
+        
         //Model
         User userTambah = new User(nama, username, password, role);
             

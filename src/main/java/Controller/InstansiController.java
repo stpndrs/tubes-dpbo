@@ -12,14 +12,14 @@ import java.sql.SQLException;
 
 public class InstansiController {
     public static void editInstansi(Instansi instansi) {
-        String query = "UPDATE instansi SET nama = ?, alamat = ?, telpon = ?, kouta = ? WHERE id = ?";
+        String query = "UPDATE instansi SET nama = ?, alamat = ?, telepon = ?, kuota = ? WHERE id = ?";
 
         try {
             PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
             stmt.setString(1, instansi.getNama());
             stmt.setString(2, instansi.getAlamat());
             stmt.setString(3, instansi.getTelpon());
-            stmt.setInt(4, instansi.getKouta());
+            stmt.setInt(4, instansi.getKuota());
             stmt.setInt(5, instansi.getId());
 
             int rowsUpdated = stmt.executeUpdate();
@@ -36,14 +36,14 @@ public class InstansiController {
     }
     
     public static void tambahInstansi(Instansi instansi) {
-        String query = "INSERT INTO instansi (nama, alamat, telpon, kouta) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO instansi (nama, alamat, telepon, kuota) VALUES (?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
             stmt.setString(1, instansi.getNama());
             stmt.setString(2, instansi.getAlamat());
             stmt.setString(3, instansi.getTelpon());
-            stmt.setInt(4, instansi.getKouta());
+            stmt.setInt(4, instansi.getKuota());
 
             int rows = stmt.executeUpdate();
             if (rows > 0) {

@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package ViewGUi;
+package ViewLogin;
 
 import ViewGuru.MonotiringForGuru;
 import ViewInstansi.MonitoringForInstansi;
+import ViewSiswa.presensiDanKegiatan;
 import Login.AuthService;
 import Session.Session;
 import ViewAdmin.DashBoard;
@@ -155,7 +156,9 @@ public class LoginView extends javax.swing.JFrame {
         }
         if(role==2){
             Session.sessionSiswa();
-            
+            presensiDanKegiatan siswa = new presensiDanKegiatan();
+            siswa.setVisible(true);
+            this.dispose();
         }
         if(role==3){
             Session.sessionGuru();

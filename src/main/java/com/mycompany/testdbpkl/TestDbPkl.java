@@ -6,7 +6,7 @@ package com.mycompany.testdbpkl;
 //import Model.Instansi;
 
 import Login.AuthService;
-import ViewGUi.LoginView;
+import ViewLogin.LoginView;
 import Login.UpdatePasswordKeHashPassword;
 
 //import Model.Siswa;

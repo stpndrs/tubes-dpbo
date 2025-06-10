@@ -7,7 +7,7 @@ package ViewGuru;
 import DataBase.DBConnection;
 import Controller.MonitoringController;
 import Session.Session;
-import ViewGUi.LoginView;
+import ViewLogin.LoginView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -31,6 +31,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
     public MonotiringForGuru() {
         initComponents(); 
         int guruId = Session.getId_guru();
+        btnLihatPresensi.setEnabled(false);
         
         tblMonitoring.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && tblMonitoring.getSelectedRow() != -1) {
@@ -38,6 +39,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                 String nisn = tblMonitoring.getValueAt(row, 1).toString();
                 SiswaId = MonitoringController.getIdSiswaByNisn(nisn);
             }
+            btnLihatPresensi.setEnabled(true);
         });
         
         tampilDataKeTabel(guruId);
@@ -91,7 +93,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        bLihatPresensi = new javax.swing.JButton();
+        btnLihatPresensi = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMonitoring = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -99,10 +101,10 @@ public class MonotiringForGuru extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        bLihatPresensi.setText("Lihat presensi");
-        bLihatPresensi.addActionListener(new java.awt.event.ActionListener() {
+        btnLihatPresensi.setText("Lihat presensi");
+        btnLihatPresensi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bLihatPresensiActionPerformed(evt);
+                btnLihatPresensiActionPerformed(evt);
             }
         });
 
@@ -159,7 +161,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                     .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(bLihatPresensi, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                    .addComponent(btnLihatPresensi, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(85, 85, 85))
         );
@@ -173,7 +175,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bLihatPresensi)
+                        .addComponent(btnLihatPresensi)
                         .addGap(226, 226, 226)
                         .addComponent(jButton1)
                         .addGap(32, 32, 32))))
@@ -182,10 +184,10 @@ public class MonotiringForGuru extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bLihatPresensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLihatPresensiActionPerformed
+    private void btnLihatPresensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLihatPresensiActionPerformed
         new DetailPresensi(SiswaId).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_bLihatPresensiActionPerformed
+    }//GEN-LAST:event_btnLihatPresensiActionPerformed
 
     private void tblMonitoringAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tblMonitoringAncestorAdded
         // TODO add your handling code here:
@@ -239,7 +241,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bLihatPresensi;
+    private javax.swing.JButton btnLihatPresensi;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

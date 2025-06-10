@@ -9,15 +9,15 @@ import java.util.ArrayList;
  * @author Pongo
  */
 public class Instansi {
-    private int id, kouta;
-    private String nama, alamat, telpon;
+    private int id, kuota;
+    private String nama, alamat, telepon;
     private User user_id;
 
-    public Instansi(int kouta, String nama, String alamat, String telpon ) {
-        this.kouta = kouta;
+    public Instansi(int kouta, String nama, String alamat, String telepon ) {
+        this.kuota = kouta;
         this.nama = nama;
         this.alamat = alamat;
-        this.telpon = telpon;
+        this.telepon = telepon;
     }
     
     public Instansi(){
@@ -49,19 +49,19 @@ public class Instansi {
     }
 
     public void setTelpon(String telpon) {
-        this.telpon = telpon;
+        this.telepon = telpon;
     }
 
     public String getTelpon() {
-        return telpon;
+        return telepon;
     }
 
-    public int getKouta() {
-        return kouta;
+    public int getKuota() {
+        return kuota;
     }
 
     public void setKouta(int kouta) {
-        this.kouta = kouta;
+        this.kuota = kouta;
     }
     
 }

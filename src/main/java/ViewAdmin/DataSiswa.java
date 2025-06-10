@@ -352,7 +352,6 @@ import scala.Int;
         String nisn = tfNisn.getText();
         int jenisKelamin = cbJenisKelamin.getSelectedIndex() + 1;
         String kelas = tfKelas.getText();
-
         //Model
         Siswa siswaEdit = new Siswa(jenisKelamin, nama, alamat, nisn, kelas);
         siswaEdit.setId(id);

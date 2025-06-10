@@ -15,15 +15,9 @@ public class inputMonitoring {
         int idSiswa = Util.inputInt("Masukkan ID Siswa: ");
         int idGuru = Util.inputInt("Masukkan ID Guru: ");
 
-        Siswa siswa = new Siswa();
-        siswa.setId(idSiswa);
-
-        Guru guru = new Guru();
-        guru.setId(idGuru);
-
         Monitoring monitoring = new Monitoring();
-        monitoring.setSiswa_id(siswa);
-        monitoring.setGuru_id(guru);
+        monitoring.setSiswa_id(idSiswa);
+        monitoring.setGuru_id(idGuru);
 
         return monitoring;
     }

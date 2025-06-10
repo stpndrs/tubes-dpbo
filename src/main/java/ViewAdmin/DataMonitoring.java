@@ -418,20 +418,11 @@ public class DataMonitoring extends javax.swing.JFrame {
             String idGuru = tfGUru.getText();
             String idInstansi = tfInstansi.getText();
             int status = cbStatus.getSelectedIndex();
-
-            //Model
             
-            Siswa siswa = new Siswa();
-            siswa.setId(Integer.parseInt(idSiswa));
-
-            Guru guru = new Guru();
-            guru.setId(Integer.parseInt(idGuru));
-            
-            
-            Monitoring monitoringTambah= new Monitoring();
-            monitoringTambah.setGuru_id(guru);
-            monitoringTambah.setSiswa_id(siswa);
-            
+            Monitoring monitoringTambah = new Monitoring();
+            monitoringTambah.setGuru_id(Integer.parseInt(idGuru));
+            monitoringTambah.setSiswa_id(Integer.parseInt(idSiswa));
+            monitoringTambah.setIsntansi_id(Integer.parseInt(idInstansi));
             
             //Controller
             controller.tambahMonitoring(monitoringTambah);
@@ -450,22 +441,12 @@ public class DataMonitoring extends javax.swing.JFrame {
             String idGuru = tfGUru.getText();
             String idInstansi = tfInstansi.getText();
             int status = cbStatus.getSelectedIndex();
-
-            //Model
-            
-            Siswa siswa = new Siswa();
-            siswa.setId(Integer.parseInt(idSiswa));
-
-            Guru guru = new Guru();
-            guru.setId(Integer.parseInt(idGuru));
-            
-            Instansi instansi = new Instansi();
-            instansi.setId(Integer.parseInt(idInstansi));
             
             Monitoring monitoringEdit = new Monitoring();
-            monitoringEdit.setGuru_id(guru);
-            monitoringEdit.setInstansi_id(instansi);
-            monitoringEdit.setSiswa_id(siswa);
+            monitoringEdit.setGuru_id(Integer.parseInt(idGuru));
+            monitoringEdit.setIsntansi_id(Integer.parseInt(idInstansi));
+            monitoringEdit.setSiswa_id(Integer.parseInt(idSiswa));
+            monitoringEdit.setId(id);
             
             
             //Controller

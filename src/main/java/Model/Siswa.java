@@ -78,6 +78,6 @@ public class Siswa{
     }
 
     public void setId(int siswaId) {
-        this.id = id;
+        this.id = siswaId;
     }
 }

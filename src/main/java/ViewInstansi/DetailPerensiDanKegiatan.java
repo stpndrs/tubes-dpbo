@@ -135,7 +135,7 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("NISN :");
 
-        bExit.setText("exit");
+        bExit.setText("kembali");
         bExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bExitActionPerformed(evt);
