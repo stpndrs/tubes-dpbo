@@ -32,10 +32,11 @@ public class DataPenguna extends javax.swing.JFrame {
             tblDataUser.getSelectionModel().addListSelectionListener(e -> {
                 if (!e.getValueIsAdjusting() && tblDataUser.getSelectedRow() != -1) {
                     int row = tblDataUser.getSelectedRow();
+                    int nmrRole = Integer.parseInt(tblDataUser.getValueAt(row, 3).toString()) - 1;
 
                     tfNama.setText(tblDataUser.getValueAt(row, 1).toString());
                     tfUsername.setText(tblDataUser.getValueAt(row, 2).toString());
-                    cbRole.setSelectedItem(tblDataUser.getValueAt(row, 3).toString());
+                    cbRole.setSelectedIndex(nmrRole);
 
                     // Nonaktifkan tombol Tambah
                     bTambah.setEnabled(false);
@@ -45,6 +46,7 @@ public class DataPenguna extends javax.swing.JFrame {
                     bCancle.setEnabled(true);
                 }
             });
+            resetForm();
             tampilDataKeTabel();  
     }
             
@@ -320,7 +322,7 @@ public class DataPenguna extends javax.swing.JFrame {
             int id = Integer.parseInt(tblDataUser.getValueAt(selectedRow, 0).toString());
             String nama = tfNama.getText();
             String username = tfUsername.getText();
-            int role = cbRole.getSelectedIndex();
+            int role = cbRole.getSelectedIndex() + 1;
             
             char[] passwordChars = pfPassword.getPassword();
             String password = new String(passwordChars);
@@ -358,7 +360,7 @@ public class DataPenguna extends javax.swing.JFrame {
             // Tampilkan ke form
             tfNama.setText(nama);
             tfUsername.setText(username);
-            cbRole.setSelectedItem(role);
+            cbRole.setSelectedItem(Integer.parseInt(role) - 1);
 
             // Tampilkan tombol simpan & cancel
             bSimpan.setVisible(true);
@@ -376,7 +378,7 @@ public class DataPenguna extends javax.swing.JFrame {
         // TODO add your handling code here:
         String nama = tfNama.getText();
         String username = tfUsername.getText();
-        int role = cbRole.getSelectedIndex();
+        int role = cbRole.getSelectedIndex() + 1;
         
         char[] passwordChars = pfPassword.getPassword();
         String password = new String(passwordChars);

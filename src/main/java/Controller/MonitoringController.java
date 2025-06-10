@@ -120,12 +120,12 @@ public class MonitoringController {
         Integer idSiswa = null;
         try {
             Connection conn = DBConnection.getConnection();
-            String query = "SELECT id_siswa FROM monitoring WHERE id = ?";
+            String query = "SELECT siswa_id FROM monitoring WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, idMonitoring);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                idSiswa = rs.getInt("id_siswa");
+                idSiswa = rs.getInt("siswa_id");
             }
             rs.close();
             stmt.close();
@@ -139,12 +139,12 @@ public class MonitoringController {
         Integer idGuru = null;
         try {
             Connection conn = DBConnection.getConnection();
-            String query = "SELECT id_guru FROM monitoring WHERE id = ?";
+            String query = "SELECT guru_id FROM monitoring WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, idMonitoring);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                idGuru = rs.getInt("id_guru");
+                idGuru = rs.getInt("guru_id");
             }
             rs.close();
             stmt.close();
@@ -158,12 +158,12 @@ public class MonitoringController {
         Integer idInstansi = null;
         try {
             Connection conn = DBConnection.getConnection();
-            String query = "SELECT id_instansi FROM monitoring WHERE id = ?";
+            String query = "SELECT instansi_id FROM monitoring WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, idMonitoring);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                idInstansi = rs.getInt("id_instansi");
+                idInstansi = rs.getInt("instansi_id");
             }
             rs.close();
             stmt.close();

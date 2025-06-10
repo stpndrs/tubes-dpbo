@@ -34,11 +34,12 @@ public class DataGuru extends javax.swing.JFrame {
             tblDataGuru.getSelectionModel().addListSelectionListener(e -> {
                 if (!e.getValueIsAdjusting() && tblDataGuru.getSelectedRow() != -1) {
                     int row = tblDataGuru.getSelectedRow();
+                    int nmrJenisKelamin = Integer.parseInt(tblDataGuru.getValueAt(row, 3).toString()) - 1;
 
                     tfNama.setText(tblDataGuru.getValueAt(row, 1).toString());
                     tfAlamat.setText(tblDataGuru.getValueAt(row, 2).toString());
                     tfNip.setText(tblDataGuru.getValueAt(row, 4).toString());
-                    cbJenisKelamin.setSelectedItem(tblDataGuru.getValueAt(row, 3).toString());
+                    cbJenisKelamin.setSelectedIndex(nmrJenisKelamin);
 
                     // Nonaktifkan tombol Tambah
                     bTambah.setEnabled(false);
@@ -370,7 +371,7 @@ public class DataGuru extends javax.swing.JFrame {
             String nama = tfNama.getText();
             String alamat = tfAlamat.getText();
             String nip = tfNip.getText();
-            int jenisKelamin = cbJenisKelamin.getSelectedIndex();
+            int jenisKelamin = cbJenisKelamin.getSelectedIndex() + 1;
 
             //Model
             Guru guruEdit = new Guru(jenisKelamin, nama, alamat, nip);
@@ -391,7 +392,7 @@ public class DataGuru extends javax.swing.JFrame {
 
     if (selectedRow >= 0) {
         // Ambil data dari kolom pada baris yang dipilih
-        int id_guru = (int) tblDataGuru.getValueAt(selectedRow, 0);
+        int id_guru = Integer.parseInt(tblDataGuru.getValueAt(selectedRow, 0).toString());
         String nama = tblDataGuru.getValueAt(selectedRow, 1).toString();
         String alamat = tblDataGuru.getValueAt(selectedRow, 2).toString();
         String jenisKelamin = tblDataGuru.getValueAt(selectedRow, 3).toString();
@@ -423,7 +424,7 @@ public class DataGuru extends javax.swing.JFrame {
         String nama = tfNama.getText();
         String alamat = tfAlamat.getText();
         String nip = tfNip.getText();
-        int jenisKelamin = cbJenisKelamin.getSelectedIndex();
+        int jenisKelamin = cbJenisKelamin.getSelectedIndex() + 1;
 
         if (nama.isEmpty() || alamat.isEmpty() || nip.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");

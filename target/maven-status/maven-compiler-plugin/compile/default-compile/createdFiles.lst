@@ -4,9 +4,7 @@ ViewAdmin\DataInstansi$5.class
 ViewAdmin\DataPenguna$3.class
 Model\Guru.class
 ViewAdmin\DataMonitoring$7.class
-ViewGUi\MelihatPresensiKegiatan$8.class
 ViewGuru\MonotiringForGuru$4.class
-ViewGUi\MelihatPresensiKegiatan.class
 View\InputEditGuru.class
 ViewGuru\DetailPresensi.class
 ViewAdmin\DataPenguna$6.class
@@ -32,13 +30,13 @@ ViewAdmin\DataSiswa.class
 ViewAdmin\DataGuru$3.class
 Controller\MonitoringController.class
 ViewAdmin\DataSiswa$4.class
+ViewAdmin\LihatPresensiAdmin$4.class
 ViewGUi\presensiDanKegiatan$2.class
 ViewAdmin\DataSiswa$1.class
 ViewAdmin\DataMonitoring.class
 ViewInstansi\DetailPerensiDanKegiatan$1.class
 ViewAdmin\DashBoard$2.class
 ViewAdmin\DataInstansi$3.class
-ViewGUi\MelihatPresensiKegiatan$6.class
 ViewGuru\MonotiringForGuru$2.class
 ViewAdmin\DataGuru$4.class
 ViewGUi\MainMenu$4.class
@@ -50,7 +48,6 @@ ViewAdmin\DataPenguna$4.class
 ViewAdmin\DataSiswa$5.class
 View\inputMonitoring.class
 DataBase\DBConnection.class
-ViewGUi\MelihatPresensiKegiatan$5.class
 Session\Session.class
 ViewGuru\MonotiringForGuru$1.class
 View\MonitoringViewer.class
@@ -64,8 +61,8 @@ ViewGUi\MainMenu$3.class
 View\InputEditInstansi.class
 ViewAdmin\DataMonitoring$8.class
 ViewGuru\Laporan.class
-ViewGUi\MelihatPresensiKegiatan$Siswa.class
 ViewAdmin\DataSiswa$6.class
+ViewAdmin\LihatPresensiAdmin.class
 ViewGuru\Laporan$2.class
 ViewAdmin\DataPenguna$5.class
 Model\Presensi.class
@@ -76,9 +73,9 @@ ViewAdmin\DataGuru$2.class
 ViewGUi\MainMenu$6.class
 ViewAdmin\DataInstansi$1.class
 ViewInstansi\DetailPerensiDanKegiatan.class
-ViewGUi\MelihatPresensiKegiatan$1.class
 Controller\InstansiController.class
 ViewAdmin\DataInstansi$4.class
+ViewAdmin\LihatPresensiAdmin$3.class
 ViewGUi\presensiDanKegiatan$3.class
 Controller\SiswaController.class
 ViewInstansi\DetailPerensiDanKegiatan$2.class
@@ -92,8 +89,6 @@ ViewGuru\Laporan$4.class
 ViewGuru\MonotiringForGuru$3.class
 ViewGuru\DetailPresensi$2.class
 ViewGUi\GuiiTubesPbo.class
-ViewGUi\MelihatPresensiKegiatan$4.class
-ViewGUi\MelihatPresensiKegiatan$7.class
 ViewAdmin\DashBoard$4.class
 Login\AuthService.class
 ViewGuru\DetailPresensi$5.class
@@ -103,6 +98,7 @@ ViewAdmin\DataGuru$7.class
 ViewAdmin\DataPenguna$8.class
 Model\Instansi.class
 ViewGUi\presensiDanKegiatan$1.class
+ViewAdmin\LihatPresensiAdmin$1.class
 ViewAdmin\DashBoard$5.class
 ViewGuru\DetailPresensi$3.class
 ViewAdmin\DashBoard.class
@@ -112,14 +108,13 @@ ViewGuru\DetailPresensi$4.class
 ViewAdmin\DataPenguna$1.class
 ViewGUi\LoginView$3.class
 ViewGUi\MainMenu.class
-ViewGUi\MelihatPresensiKegiatan$3.class
 ViewAdmin\DataPenguna$2.class
 ViewAdmin\DataGuru$8.class
 ViewAdmin\DataInstansi.class
 ViewAdmin\DataSiswa$2.class
+ViewAdmin\LihatPresensiAdmin$2.class
 ViewAdmin\DataGuru$1.class
 ViewAdmin\DashBoard$6.class
-ViewGUi\MelihatPresensiKegiatan$2.class
 View\InpuEditSiswa.class
 ViewAdmin\DataInstansi$6.class
 ViewGuru\Laporan$5.class

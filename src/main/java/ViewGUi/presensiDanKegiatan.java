@@ -5,7 +5,6 @@
 package ViewGUi;
 
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author Axioo Pongo

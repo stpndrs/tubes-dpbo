@@ -30,11 +30,13 @@ import scala.Int;
             tblDataSiswa.getSelectionModel().addListSelectionListener(e -> {
                 if (!e.getValueIsAdjusting() && tblDataSiswa.getSelectedRow() != -1) {
                     int row = tblDataSiswa.getSelectedRow();
+                    String jenisKelamin = tblDataSiswa.getValueAt(row, 4).toString();
+                    int nmrJenisKelamin = Integer.parseInt(jenisKelamin) - 1;
 
                     tfNama.setText(tblDataSiswa.getValueAt(row, 1).toString());
                     tfAlamat.setText(tblDataSiswa.getValueAt(row, 2).toString());
                     tfNisn.setText(tblDataSiswa.getValueAt(row, 3).toString());
-                    cbJenisKelamin.setSelectedItem(tblDataSiswa.getValueAt(row, 4).toString());
+                    cbJenisKelamin.setSelectedIndex(nmrJenisKelamin);
                     tfKelas.setText(tblDataSiswa.getValueAt(row, 5).toString());
 
                     // Nonaktifkan tombol Tambah
@@ -348,7 +350,7 @@ import scala.Int;
         String nama = tfNama.getText();
         String alamat = tfAlamat.getText();
         String nisn = tfNisn.getText();
-        int jenisKelamin = cbJenisKelamin.getSelectedIndex();
+        int jenisKelamin = cbJenisKelamin.getSelectedIndex() + 1;
         String kelas = tfKelas.getText();
 
         //Model
@@ -370,7 +372,7 @@ import scala.Int;
 
     if (selectedRow >= 0) {
         // Ambil data dari kolom pada baris yang dipilih
-        int id_siswa = (int) tblDataSiswa.getValueAt(selectedRow, 0);
+        int id_siswa = Integer.parseInt(tblDataSiswa.getValueAt(selectedRow, 0).toString());
         String nama = tblDataSiswa.getValueAt(selectedRow, 1).toString();
         String alamat = tblDataSiswa.getValueAt(selectedRow, 2).toString();
         String nisn = tblDataSiswa.getValueAt(selectedRow, 3).toString();
@@ -381,7 +383,7 @@ import scala.Int;
         tfNama.setText(nama);
         tfAlamat.setText(alamat);
         tfNisn.setText(nisn);
-        cbJenisKelamin.setSelectedItem(jenisKelamin);
+        cbJenisKelamin.setSelectedIndex(Integer.parseInt(jenisKelamin) - 1);
         tfKelas.setText(kelas);
 
         // Tampilkan tombol simpan & cancel
@@ -401,7 +403,7 @@ import scala.Int;
         String alamat = tfAlamat.getText();
         String nisn = tfNisn.getText();
         String kelas = tfKelas.getText();
-        int jenisKelamin = cbJenisKelamin.getSelectedIndex();
+        int jenisKelamin = cbJenisKelamin.getSelectedIndex() + 1;
 
         if (nama.isEmpty() || alamat.isEmpty() || nisn.isEmpty() || kelas.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");
@@ -426,7 +428,7 @@ import scala.Int;
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void cbJenisKelaminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbJenisKelaminActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_cbJenisKelaminActionPerformed
 
     /**
