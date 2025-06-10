@@ -9,7 +9,6 @@ View\InputEditGuru.class
 ViewGuru\DetailPresensi.class
 ViewAdmin\DataPenguna$6.class
 ViewGUi\MainMenu$Siswa.class
-ViewGuru\Laporan$3.class
 ViewAdmin\DataGuru$9.class
 ViewAdmin\DashBoard$3.class
 View\InputUser.class
@@ -60,10 +59,8 @@ ViewAdmin\DataGuru$5.class
 ViewGUi\MainMenu$3.class
 View\InputEditInstansi.class
 ViewAdmin\DataMonitoring$8.class
-ViewGuru\Laporan.class
 ViewAdmin\DataSiswa$6.class
 ViewAdmin\LihatPresensiAdmin.class
-ViewGuru\Laporan$2.class
 ViewAdmin\DataPenguna$5.class
 Model\Presensi.class
 ViewInstansi\MonitoringForInstansi$3.class
@@ -79,19 +76,16 @@ ViewAdmin\LihatPresensiAdmin$3.class
 ViewGUi\presensiDanKegiatan$3.class
 Controller\SiswaController.class
 ViewInstansi\DetailPerensiDanKegiatan$2.class
-ViewGuru\Laporan$1.class
 ViewAdmin\DataMonitoring$6.class
 ViewAdmin\DashBoard$1.class
 ViewAdmin\DataPenguna$7.class
 com\mycompany\testdbpkl\TestDbPkl.class
 Controller\UserController.class
-ViewGuru\Laporan$4.class
 ViewGuru\MonotiringForGuru$3.class
 ViewGuru\DetailPresensi$2.class
 ViewGUi\GuiiTubesPbo.class
 ViewAdmin\DashBoard$4.class
 Login\AuthService.class
-ViewGuru\DetailPresensi$5.class
 ViewAdmin\DataSiswa$8.class
 ViewGUi\MainMenu$1.class
 ViewAdmin\DataGuru$7.class
@@ -117,7 +111,6 @@ ViewAdmin\DataGuru$1.class
 ViewAdmin\DashBoard$6.class
 View\InpuEditSiswa.class
 ViewAdmin\DataInstansi$6.class
-ViewGuru\Laporan$5.class
 ViewAdmin\DataPenguna.class
 ViewGUi\LoginView$2.class
 Controller\GuruController.class

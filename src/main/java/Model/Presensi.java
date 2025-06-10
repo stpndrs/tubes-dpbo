@@ -38,6 +38,10 @@ public class Presensi {
         return jam_masuk;
     }
 
+    public void setJam_masuk(String jam_masuk) {
+        this.jam_masuk = jam_masuk;
+    }
+
     public String getJam_keluar() {
         return jam_keluar;
     }
@@ -62,7 +66,4 @@ public class Presensi {
         this.keterangan = keterangan;
     }
 
-    public String getLokasi() {
-        return lokasi;
-    }
 }

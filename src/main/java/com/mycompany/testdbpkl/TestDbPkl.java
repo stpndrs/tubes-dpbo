@@ -50,7 +50,7 @@ public class TestDbPkl {
                 System.out.println("Login gagal");
             }
             */
-            UpdatePasswordKeHashPassword.hashSemuaPassword();
+            //UpdatePasswordKeHashPassword.hashSemuaPassword();
             
             new LoginView().setVisible(true);
            

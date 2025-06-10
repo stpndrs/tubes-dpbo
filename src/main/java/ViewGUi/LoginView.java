@@ -4,6 +4,7 @@
  */
 package ViewGUi;
 
+import ViewGuru.MonotiringForGuru;
 import Login.AuthService;
 import Session.Session;
 import ViewAdmin.DashBoard;
@@ -137,40 +138,32 @@ public class LoginView extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = tfUsernameLogin.getText();
         String password = String.valueOf(pfPasswordLogin.getPassword());
+        int role = 0;
         
         if(AuthService.login(username, password)){
-            int role = Session.getRole();
-            switch (role) {
-                case 2 -> Session.sessionSiswa();
-                case 3 -> Session.sessionGuru();
-                case 4 -> Session.sessionInstansi();
-                //default -> System.out.println("Role tidak dikenal.");
-            }
+            role = Session.getRole();
         } else{
             showMessageDialog(null, "Akun Tidak Ditemukan");
         }
         
-        int role = Session.getRole();
         if (role==1) {
             // to admin dashboard
             DashBoard admin = new DashBoard();
             admin.setVisible(true);
             this.dispose();
         }
-
-//        if (isSupervisor) {
-//            // to Supervisor Dashboard
-//            SupervisorDashboard sd = new SupervisorDashboard();
-//            sd.setVisible(true);
-//            this.dispose();
-//        }
-//
-//        if (isSales) {
-//            // to Sales Dashboard
-//            SalesDashboard sdd = new SalesDashboard();
-//            sdd.setVisible(true);
-//            this.dispose();
-//        }
+        if(role==2){
+            
+        }
+        if(role==3){
+            Session.sessionGuru();
+            MonotiringForGuru guru = new MonotiringForGuru();
+            guru.setVisible(true);
+            this.dispose();
+        }
+        if(role==4){
+            
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**

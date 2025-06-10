@@ -267,4 +267,26 @@ public class MonitoringController {
         }
         return -1;
     }
+    
+    public static Integer getIdSiswaByNisn(String nisn) {
+        String sql = "SELECT id FROM siswa WHERE nisn = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nisn);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id");
+            } else {
+                System.out.println("Siswa dengan NISN tersebut tidak ditemukan.");
+                return null;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Gagal mengambil ID siswa: " + e.getMessage());
+            return null;
+        }
+    }
 }

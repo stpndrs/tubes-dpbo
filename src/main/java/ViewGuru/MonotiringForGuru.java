@@ -4,26 +4,84 @@
  */
 package ViewGuru;
 
-//import ViewAdmin.Data;
-import javax.swing.JOptionPane;
+import Controller.SiswaController;
+import DataBase.DBConnection;
+import Controller.MonitoringController;
+import Session.Session;
+
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+import scala.Int;
 
 /**
  *
  * @author Axioo Pongo
  */
 public class MonotiringForGuru extends javax.swing.JFrame {
-
+    
+    private Session session;
+    private MonitoringController controller;
+    private int SiswaId;
+    
     /**
      * Creates new form MonotiringForGuru
      */
     public MonotiringForGuru() {
-        initComponents();
-   //      Data.inputan();
+        initComponents(); 
+        int guruId = Session.getId_guru();
         
+        tblMonitoringGuru.getSelectionModel().addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting() && tblMonitoringGuru.getSelectedRow() != -1) {
+                    int row = tblMonitoringGuru.getSelectedRow();
+                    String nisn = tblMonitoringGuru.getValueAt(row, 1).toString();
+                    SiswaId = MonitoringController.getIdSiswaByNisn(nisn);
+                }
+            });
         
+        tampilDataKeTabel(guruId);
     }
+    
+    private void tampilDataKeTabel(int guruId) {
+        DefaultTableModel model = (DefaultTableModel) tblMonitoringGuru.getModel();
+        model.setRowCount(0); // Bersihkan tabel sebelum isi
 
+        String sql = "SELECT s.id, s.nama, s.nisn, s.kelas, m.tanggal_mulai, m.tanggal_selesai, i.nama AS nama_instansi " +
+                     "FROM monitoring m " +
+                     "JOIN siswa s ON m.siswa_id = s.id " +
+                     "JOIN instansi i ON m.instansi_id = i.id " +
+                     "WHERE m.guru_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, guruId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String nama = rs.getString("nama");
+                String nisn = rs.getString("nisn");
+                String kelas = rs.getString("kelas");
+                String tanggal_mulai = rs.getString("tanggal_mulai");
+                String tanggal_selesai = rs.getString("tanggal_selesai");
+                String instansi = rs.getString("nama_instansi");
+                SiswaId = rs.getInt("id");
+                
+                if(tanggal_mulai == null){
+                    tanggal_mulai = "-";
+                }
+                if(tanggal_selesai == null){
+                    tanggal_selesai = "-";
+                }
+
+                model.addRow(new Object[]{nama, nisn, kelas, tanggal_mulai, tanggal_selesai, instansi});
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,9 +93,8 @@ public class MonotiringForGuru extends javax.swing.JFrame {
 
         bLihatPresensi = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tDataMonitoring = new javax.swing.JTable();
+        tblMonitoringGuru = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        bLihatDataLaporan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,40 +105,38 @@ public class MonotiringForGuru extends javax.swing.JFrame {
             }
         });
 
-        tDataMonitoring.setModel(new javax.swing.table.DefaultTableModel(
+        tblMonitoringGuru.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Nama ", "Nisn", "Kelas", "Bulan Mulai / tanggal selesai", "Instansi"
+                "Nama ", "Nisn", "Kelas", "Tanggal Mulai", "Tanggal Selesai", "Instansi"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, true, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tDataMonitoring.addAncestorListener(new javax.swing.event.AncestorListener() {
+        tblMonitoringGuru.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                tDataMonitoringAncestorAdded(evt);
+                tblMonitoringGuruAncestorAdded(evt);
             }
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
-        jScrollPane1.setViewportView(tDataMonitoring);
+        jScrollPane1.setViewportView(tblMonitoringGuru);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Data Monitoring");
-
-        bLihatDataLaporan.setText("Lihat data laporan");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,9 +150,7 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                         .addGap(0, 726, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bLihatDataLaporan)
-                    .addComponent(bLihatPresensi, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(bLihatPresensi, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(85, 85, 85))
         );
         layout.setVerticalGroup(
@@ -108,41 +161,28 @@ public class MonotiringForGuru extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(87, 87, 87)
-                        .addComponent(bLihatPresensi)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bLihatDataLaporan)
-                        .addGap(137, 137, 137))))
+                        .addComponent(bLihatPresensi)
+                        .addGap(281, 281, 281))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void bLihatPresensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLihatPresensiActionPerformed
-        // TODO add your handling code here:
-        int selectedRow = tDataMonitoring.getSelectedRow();
-        if (selectedRow != -1) {
-            String nama = tDataMonitoring.getValueAt(selectedRow, 0).toString();
-            String nisn = tDataMonitoring.getValueAt(selectedRow, 1).toString();
-            String instansi = tDataMonitoring.getValueAt(selectedRow, 2).toString();
-
-            
-            DetailPresensi dp = new DetailPresensi(nama, nisn, instansi);
-            dp.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Silakan pilih baris data terlebih dahulu.");
-        }
+        new DetailPresensi(SiswaId).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_bLihatPresensiActionPerformed
 
-    private void tDataMonitoringAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tDataMonitoringAncestorAdded
+    private void tblMonitoringGuruAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tblMonitoringGuruAncestorAdded
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tDataMonitoring.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblMonitoringGuru.getModel();
 
         Object[] rowData = new Object[4];
 
         model.addRow(rowData);
-    }//GEN-LAST:event_tDataMonitoringAncestorAdded
+    }//GEN-LAST:event_tblMonitoringGuruAncestorAdded
 
     /**
      * @param args the command line arguments
@@ -180,10 +220,9 @@ public class MonotiringForGuru extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bLihatDataLaporan;
     private javax.swing.JButton bLihatPresensi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tDataMonitoring;
+    private javax.swing.JTable tblMonitoringGuru;
     // End of variables declaration//GEN-END:variables
 }
