@@ -31,25 +31,31 @@ public class DataGuru extends javax.swing.JFrame {
         super("Data Guru");
             initComponents();
             controller = new GuruController();// menghubungkan ke Controller
-            tblDataGuru.getSelectionModel().addListSelectionListener(e -> {
-                if (!e.getValueIsAdjusting() && tblDataGuru.getSelectedRow() != -1) {
-                    int row = tblDataGuru.getSelectedRow();
-                    int nmrJenisKelamin = Integer.parseInt(tblDataGuru.getValueAt(row, 3).toString()) - 1;
-
-                    tfNama.setText(tblDataGuru.getValueAt(row, 1).toString());
-                    tfAlamat.setText(tblDataGuru.getValueAt(row, 2).toString());
-                    tfNip.setText(tblDataGuru.getValueAt(row, 4).toString());
-                    cbJenisKelamin.setSelectedIndex(nmrJenisKelamin);
-
-                    // Nonaktifkan tombol Tambah
-                    bTambah.setEnabled(false);
-
-                    // Aktifkan tombol Edit dan Hapus
-                    bEdit.setEnabled(true);
-                    bCancle.setEnabled(true);
-                }
-            });
+//            tblDataGuru.getSelectionModel().addListSelectionListener(e -> {
+//                if (!e.getValueIsAdjusting() && tblDataGuru.getSelectedRow() != -1) {
+//                    int row = tblDataGuru.getSelectedRow();
+//                    int nmrJenisKelamin = Integer.parseInt(tblDataGuru.getValueAt(row, 3).toString()) - 1;
+//
+//                    tfNama.setText(tblDataGuru.getValueAt(row, 1).toString());
+//                    tfAlamat.setText(tblDataGuru.getValueAt(row, 2).toString());
+//                    tfNip.setText(tblDataGuru.getValueAt(row, 4).toString());
+//                    cbJenisKelamin.setSelectedIndex(nmrJenisKelamin);
+//
+//                    // Nonaktifkan tombol Tambah
+//                    bTambah.setEnabled(false);
+//
+//                    // Aktifkan tombol Edit dan Hapus
+//                    bEdit.setEnabled(true);
+//                    bCancle.setEnabled(true);
+//                }
+//            });
             resetForm();
+            
+            // Menyembunyikan kolom pertama (indeks 0)
+            tblDataGuru.getColumnModel().getColumn(0).setMinWidth(0);
+            tblDataGuru.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblDataGuru.getColumnModel().getColumn(0).setWidth(0);
+            
             tampilDataKeTabel();
     }
     
@@ -92,7 +98,7 @@ public class DataGuru extends javax.swing.JFrame {
 
         // Tombol kembali ke default
         bTambah.setEnabled(true);
-        bEdit.setEnabled(false);
+        bEdit.setEnabled(true);
         bSimpan.setVisible(false);
         bCancle.setVisible(false);
     }
@@ -404,9 +410,10 @@ public class DataGuru extends javax.swing.JFrame {
         tfNip.setText(nip);
         cbJenisKelamin.setSelectedItem(jenisKelamin);
 
-        // Tampilkan tombol simpan & cancel
+        // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
         bSimpan.setVisible(true);
         bCancle.setVisible(true);
+        bTambah.setEnabled(false);
 
         // Simpan row index yang diedit ke variable tersembunyi
         tblDataGuru.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
@@ -430,16 +437,33 @@ public class DataGuru extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");
             return;
         }
-        //Model
-        Guru guruBaru = new Guru(jenisKelamin, nama, alamat, nip);
+        // Tampilkan dialog konfirmasi sebelum menyimpan
+        int konfirmasi = JOptionPane.showConfirmDialog(
+            this,
+            "Apakah Anda yakin ingin menambahkan data guru ini?",
+            "Konfirmasi Tambah Data",
+            JOptionPane.OK_CANCEL_OPTION
+        );
 
-        //Controller
-        GuruController.tambahGuru(guruBaru);
+        if (konfirmasi == JOptionPane.OK_OPTION) {
+            // Jika user tekan OK
 
-        // Bersihkan form
-        resetForm();
-        
-        tampilDataKeTabel();
+            // Model
+            Guru guruBaru = new Guru(jenisKelamin, nama, alamat, nip);
+
+            // Controller
+            GuruController.tambahGuru(guruBaru);
+
+            // Bersihkan form
+            resetForm();
+
+            // Tampilkan ulang data ke tabel
+            tampilDataKeTabel();
+
+        } else {
+            // Jika user tekan Cancel, tidak lakukan apa-apa
+            System.out.println("Tambah data dibatalkan oleh pengguna.");
+        }
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

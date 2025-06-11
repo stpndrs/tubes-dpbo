@@ -29,23 +29,12 @@ public class DataPenguna extends javax.swing.JFrame {
         super("Data User");
             initComponents();
             controller = new UserController();
-            tblDataUser.getSelectionModel().addListSelectionListener(e -> {
-                if (!e.getValueIsAdjusting() && tblDataUser.getSelectedRow() != -1) {
-                    int row = tblDataUser.getSelectedRow();
-                    int nmrRole = Integer.parseInt(tblDataUser.getValueAt(row, 3).toString()) - 1;
 
-                    tfNama.setText(tblDataUser.getValueAt(row, 1).toString());
-                    tfUsername.setText(tblDataUser.getValueAt(row, 2).toString());
-                    cbRole.setSelectedIndex(nmrRole);
+            // Menyembunyikan kolom pertama (indeks 0)
+            tblDataUser.getColumnModel().getColumn(0).setMinWidth(0);
+            tblDataUser.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblDataUser.getColumnModel().getColumn(0).setWidth(0);
 
-                    // Nonaktifkan tombol Tambah
-                    bTambah.setEnabled(false);
-
-                    // Aktifkan tombol Edit dan Hapus
-                    bEdit.setEnabled(true);
-                    bCancle.setEnabled(true);
-                }
-            });
             resetForm();
             tampilDataKeTabel();  
     }
@@ -86,7 +75,7 @@ public class DataPenguna extends javax.swing.JFrame {
 
         // Tombol kembali ke default
         bTambah.setEnabled(true);
-        bEdit.setEnabled(false);
+        bEdit.setEnabled(true);
         bSimpan.setVisible(false);
         bCancle.setVisible(false);
     }
@@ -352,7 +341,7 @@ public class DataPenguna extends javax.swing.JFrame {
 
         if (selectedRow >= 0) {
             // Ambil data dari kolom pada baris yang dipilih
-            int id = (int) tblDataUser.getValueAt(selectedRow, 0);
+            int id = Integer.parseInt(tblDataUser.getValueAt(selectedRow, 0).toString());
             String nama = tblDataUser.getValueAt(selectedRow, 1).toString();
             String username = tblDataUser.getValueAt(selectedRow, 2).toString();
             String role = tblDataUser.getValueAt(selectedRow, 3).toString();
@@ -362,9 +351,10 @@ public class DataPenguna extends javax.swing.JFrame {
             tfUsername.setText(username);
             cbRole.setSelectedItem(Integer.parseInt(role) - 1);
 
-            // Tampilkan tombol simpan & cancel
+            // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
             bSimpan.setVisible(true);
             bCancle.setVisible(true);
+            bTambah.setEnabled(false);
 
             // Simpan row index yang diedit ke variable tersembunyi
             tblDataUser.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
@@ -375,29 +365,41 @@ public class DataPenguna extends javax.swing.JFrame {
     }//GEN-LAST:event_bEditActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-        // TODO add your handling code here:
         String nama = tfNama.getText();
         String username = tfUsername.getText();
         int role = cbRole.getSelectedIndex() + 1;
-        
+
         char[] passwordChars = pfPassword.getPassword();
         String password = new String(passwordChars);
-        
-        if(password == null || username == null){
-            JOptionPane.showMessageDialog(this, "Usernam atau password tidak boleh kosong");
+
+        // Validasi input
+        if (nama.isEmpty() || username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama, username, dan password tidak boleh kosong.");
             return;
         }
-        
-        //Model
-        User userTambah = new User(nama, username, password, role);
-            
-        //COntroller
-        UserController.tambahUser(userTambah);
 
-        // Bersihkan form
-        resetForm();
+        // Tampilkan dialog konfirmasi
+        int konfirmasi = JOptionPane.showConfirmDialog(
+            this,
+            "Apakah Anda yakin ingin menambahkan user \"" + username + "\"?",
+            "Konfirmasi Tambah User",
+            JOptionPane.OK_CANCEL_OPTION
+        );
 
-        tampilDataKeTabel();
+        if (konfirmasi == JOptionPane.OK_OPTION) {
+            // MODEL
+            User userTambah = new User(nama, username, password, role);
+
+            // CONTROLLER
+            UserController.tambahUser(userTambah);
+
+            // Reset form dan refresh tabel
+            resetForm();
+            tampilDataKeTabel();
+        } else {
+            // Batal ditekan
+            System.out.println("Penambahan user dibatalkan.");
+        }
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void cbRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRoleActionPerformed

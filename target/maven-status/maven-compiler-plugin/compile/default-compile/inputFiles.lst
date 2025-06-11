@@ -5,10 +5,12 @@ C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\DataBase\DBConnection.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Model\Siswa.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Model\Waktu.java
+C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewJDialogAdmin\PilihGuru.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\View\InputEditGuru.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Model\User.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Model\Guru.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewAdmin\DataInstansi.java
+C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewJDialogAdmin\PiliihInstansi.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Controller\PresensiController.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Controller\SiswaController.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewGuru\DetailPresensi.java
@@ -18,6 +20,7 @@ C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Controller\UserController.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewAdmin\LihatPresensiAdmin.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewAdmin\DataGuru.java
+C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewJDialogAdmin\PilihSiswa.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\com\mycompany\testdbpkl\TestDbPkl.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewSiswa\MainMenu.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Session\Session.java

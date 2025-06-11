@@ -27,23 +27,29 @@ public class DataInstansi extends javax.swing.JFrame {
         super("Data Siswa");
             initComponents();
             controller = new InstansiController(); // menghubungkan ke Controller
-            tblDataInstansi.getSelectionModel().addListSelectionListener(e -> {
-                if (!e.getValueIsAdjusting() && tblDataInstansi.getSelectedRow() != -1) {
-                    int row = tblDataInstansi.getSelectedRow();
-                    
-                    tfNama.setText(tblDataInstansi.getValueAt(row, 1).toString());
-                    tfAlamat.setText(tblDataInstansi.getValueAt(row, 2).toString());
-                    tfTelepone.setText(tblDataInstansi.getValueAt(row, 3).toString());
-                    tfSisaKuota.setText(tblDataInstansi.getValueAt(row, 4).toString());
+//            tblDataInstansi.getSelectionModel().addListSelectionListener(e -> {
+//                if (!e.getValueIsAdjusting() && tblDataInstansi.getSelectedRow() != -1) {
+//                    int row = tblDataInstansi.getSelectedRow();
+//                    
+//                    tfNama.setText(tblDataInstansi.getValueAt(row, 1).toString());
+//                    tfAlamat.setText(tblDataInstansi.getValueAt(row, 2).toString());
+//                    tfTelepone.setText(tblDataInstansi.getValueAt(row, 3).toString());
+//                    tfSisaKuota.setText(tblDataInstansi.getValueAt(row, 4).toString());
+//
+//                    // Nonaktifkan tombol Tambah
+//                    bTambah.setEnabled(false);
+//
+//                    // Aktifkan tombol Edit dan Hapus
+//                    bEdit.setEnabled(true);
+//                    bCancle.setEnabled(true);
+//                }
+//            });
 
-                    // Nonaktifkan tombol Tambah
-                    bTambah.setEnabled(false);
+            // Menyembunyikan kolom pertama (indeks 0)
+            tblDataInstansi.getColumnModel().getColumn(0).setMinWidth(0);
+            tblDataInstansi.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblDataInstansi.getColumnModel().getColumn(0).setWidth(0);
 
-                    // Aktifkan tombol Edit dan Hapus
-                    bEdit.setEnabled(true);
-                    bCancle.setEnabled(true);
-                }
-            });
             resetForm();
             tampilDataKeTabel();
     }
@@ -86,7 +92,7 @@ public class DataInstansi extends javax.swing.JFrame {
 
         // Tombol kembali ke default
         bTambah.setEnabled(true);
-        bEdit.setEnabled(false);
+        bEdit.setEnabled(true);
         bSimpan.setVisible(false);
         bCancle.setVisible(false);
     }
@@ -354,9 +360,10 @@ public class DataInstansi extends javax.swing.JFrame {
         tfTelepone.setText(telepon);
         tfSisaKuota.setText(kuota);
 
-        // Tampilkan tombol simpan & cancel
+        // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
         bSimpan.setVisible(true);
         bCancle.setVisible(true);
+        bTambah.setEnabled(false);
         
         // Simpan row index yang diedit ke variable tersembunyi
         tblDataInstansi.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
@@ -366,25 +373,48 @@ public class DataInstansi extends javax.swing.JFrame {
     }//GEN-LAST:event_bEditActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-        // TODO add your handling code here:
         String nama = tfNama.getText();
         String alamat = tfAlamat.getText();
         String telepon = tfTelepone.getText();
-        int kuota = Integer.parseInt(tfSisaKuota.getText());
 
+        // Validasi awal
         if (nama.isEmpty() || alamat.isEmpty() || telepon.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");
             return;
         }
-        
-        //MODEL
-        Instansi instansiBaru = new Instansi(kuota, nama, alamat, telepon);
-        
-        //CONTROLLER
-        InstansiController.tambahInstansi(instansiBaru);
-        
-        resetForm();
-        tampilDataKeTabel();
+
+        int kuota;
+        try {
+            kuota = Integer.parseInt(tfSisaKuota.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Kuota harus berupa angka.");
+            return;
+        }
+
+        // Tampilkan konfirmasi sebelum simpan
+        int konfirmasi = JOptionPane.showConfirmDialog(
+            this,
+            "Apakah Anda yakin ingin menambahkan instansi \"" + nama + "\"?",
+            "Konfirmasi Tambah",
+            JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (konfirmasi == JOptionPane.OK_OPTION) {
+            //  Jika OK ditekan
+
+            // MODEL
+            Instansi instansiBaru = new Instansi(kuota, nama, alamat, telepon);
+
+            // CONTROLLER
+            InstansiController.tambahInstansi(instansiBaru);
+
+            // Reset form dan refresh tabel
+            resetForm();
+            tampilDataKeTabel();
+        } else {
+            //  Batal ditekan, tidak lakukan apa-apa
+            System.out.println("Penambahan instansi dibatalkan.");
+        }
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

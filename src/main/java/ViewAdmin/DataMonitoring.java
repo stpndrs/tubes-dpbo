@@ -10,6 +10,9 @@ import Model.Guru;
 import Model.Instansi;
 import Model.Monitoring;
 import Model.Siswa;
+import ViewJDialogAdmin.PilihSiswa;
+import ViewJDialogAdmin.PilihGuru;
+import ViewJDialogAdmin.PiliihInstansi;
 
 
 import javax.swing.*;
@@ -27,26 +30,12 @@ public class DataMonitoring extends javax.swing.JFrame {
         super("Data Monitoring");
             initComponents();
             controller = new MonitoringController(); // menghubungkan ke Controller
-            tblDataMonitoring.getSelectionModel().addListSelectionListener(e -> {
-                if (!e.getValueIsAdjusting() && tblDataMonitoring.getSelectedRow() != -1) {
-                    int row = tblDataMonitoring.getSelectedRow();
-                    int nmrStatus = Integer.parseInt(tblDataMonitoring.getValueAt(row, 4).toString());
 
-                    tfNama.setText(tblDataMonitoring.getValueAt(row, 1).toString());
-                    tfMulai.setText(tblDataMonitoring.getValueAt(row, 2).toString());
-                    tfSelesai.setText(tblDataMonitoring.getValueAt(row, 3).toString());
-                    cbStatus.setSelectedIndex(nmrStatus);
-                    tfInstansi.setText(tblDataMonitoring.getValueAt(row, 5).toString());
-                    tfGUru.setText(tblDataMonitoring.getValueAt(row, 6).toString());
+            // Menyembunyikan kolom pertama (indeks 0)
+            tblDataMonitoring.getColumnModel().getColumn(0).setMinWidth(0);
+            tblDataMonitoring.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblDataMonitoring.getColumnModel().getColumn(0).setWidth(0);
 
-                    // Nonaktifkan tombol Tambah
-                    bTambah.setEnabled(false);
-
-                    // Aktifkan tombol Edit dan Hapus
-                    bEdit.setEnabled(true);
-                    bCancle.setEnabled(true);
-                }
-            });
             resetForm();
             tampilDataKeTabel();
     }
@@ -93,22 +82,21 @@ public class DataMonitoring extends javax.swing.JFrame {
     }
     
     private void resetForm() {
-        tfInstansi.setText("");
-        tfNama.setText("");
+        btnPilihGuru.setText("Pilih Guru");
+        btnPilihInstansi.setText("Pilih Instansi");
+        btnPilihSiswa.setText("Pilih Siswa");
         tfMulai.setText("");
         tfSelesai.setText("");
-        tfGUru.setText("");
         cbStatus.setSelectedIndex(0);
 
         tblDataMonitoring.clearSelection(); // hapus seleksi di tabel
 
         // Tombol kembali ke default
         bTambah.setEnabled(true);
-        bEdit.setEnabled(false);
+        bEdit.setEnabled(true);
         bSimpan.setVisible(false);
         bCancle.setVisible(false);
     }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,16 +115,16 @@ public class DataMonitoring extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        tfNama = new javax.swing.JTextField();
         tfMulai = new javax.swing.JTextField();
         tfSelesai = new javax.swing.JTextField();
-        tfInstansi = new javax.swing.JTextField();
         bTambah = new javax.swing.JButton();
         bSimpan = new javax.swing.JButton();
         bCancle = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        tfGUru = new javax.swing.JTextField();
         cbStatus = new javax.swing.JComboBox<>();
+        btnPilihSiswa = new javax.swing.JButton();
+        btnPilihInstansi = new javax.swing.JButton();
+        btnPilihGuru = new javax.swing.JButton();
         bLihatPresensi = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -199,6 +187,27 @@ public class DataMonitoring extends javax.swing.JFrame {
 
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0. Ditolak", "1. Pengajuan", "2. Diterima", "3. Pelaksanaan", "4. Selesai" }));
 
+        btnPilihSiswa.setText("Pilih Siswa");
+        btnPilihSiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPilihSiswaActionPerformed(evt);
+            }
+        });
+
+        btnPilihInstansi.setText("Pilih Instansi");
+        btnPilihInstansi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPilihInstansiActionPerformed(evt);
+            }
+        });
+
+        btnPilihGuru.setText("Pilih Guru");
+        btnPilihGuru.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPilihGuruActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -207,25 +216,9 @@ public class DataMonitoring extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(tfNama))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(tfInstansi))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(tfMulai))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
                         .addComponent(tfSelesai))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(tfGUru))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -237,12 +230,26 @@ public class DataMonitoring extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfMulai)
+                            .addComponent(btnPilihSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPilihInstansi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPilihGuru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -251,7 +258,7 @@ public class DataMonitoring extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(tfNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnPilihSiswa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
@@ -267,12 +274,12 @@ public class DataMonitoring extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(tfInstansi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnPilihInstansi))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(tfGUru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                    .addComponent(btnPilihGuru))
+                .addGap(39, 39, 39)
                 .addComponent(bEdit)
                 .addGap(18, 18, 18)
                 .addComponent(bTambah)
@@ -362,7 +369,7 @@ public class DataMonitoring extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
                         .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -383,27 +390,24 @@ public class DataMonitoring extends javax.swing.JFrame {
         int selectedRow = tblDataMonitoring.getSelectedRow();
 
     if (selectedRow >= 0) {
-        // Ambil data dari kolom pada baris yang dipilih
-        int id = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 0).toString());
-        String nama = tblDataMonitoring.getValueAt(selectedRow, 1).toString();
-        String mulai = tblDataMonitoring.getValueAt(selectedRow, 2).toString();
-        String selesai = tblDataMonitoring.getValueAt(selectedRow, 3).toString();
-        String status = tblDataMonitoring.getValueAt(selectedRow, 4).toString();
-        String instansi = tblDataMonitoring.getValueAt(selectedRow, 5).toString();
-        String guru = tblDataMonitoring.getValueAt(selectedRow, 6).toString();
-
-        // Tampilkan ke form
-        tfNama.setText(String.valueOf(controller.getIdSiswaByMonitoringId(id)));
-        tfMulai.setText(mulai);
-        tfSelesai.setText(selesai);
-        cbStatus.setSelectedItem(status);
-        tfInstansi.setText(String.valueOf(controller.getIdInstansiByMonitoringId(id)));
-        tfGUru.setText(String.valueOf(controller.getIdGuruByMonitoringId(id)));
-
-        // Tampilkan tombol simpan & cancel
+        //Tampilkan ke form
+        int idMonitoring = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 0).toString());
+        String namaSiswa = tblDataMonitoring.getValueAt(selectedRow, 1).toString();
+        String namaInstansi = tblDataMonitoring.getValueAt(selectedRow, 6).toString();
+        String namGuru = tblDataMonitoring.getValueAt(selectedRow, 5).toString();
+        btnPilihGuru.setText(namGuru);
+        btnPilihInstansi.setText(namaInstansi);
+        btnPilihSiswa.setText(namaSiswa);
+        
+        //Jika tidak ada perubahan
+        id_guru = controller.getIdGuruByMonitoringId(idMonitoring);
+        id_siswa = controller.getIdSiswaByMonitoringId(idMonitoring);
+        id_instansi = controller.getIdInstansiByMonitoringId(idMonitoring);
+        
+        // Tampilkan tombol simpan & cancel & sembunyikan tombol tambah
         bSimpan.setVisible(true);
         bCancle.setVisible(true);
-        bLihatPresensi.setEnabled(true);
+        bTambah.setEnabled(false);
         
         // Simpan row index yang diedit ke variable tersembunyi
         tblDataMonitoring.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
@@ -413,39 +417,52 @@ public class DataMonitoring extends javax.swing.JFrame {
     }//GEN-LAST:event_bEditActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-        //int id = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 1).toString());
-            String idSiswa = tfNama.getText();
-            String idGuru = tfGUru.getText();
-            String idInstansi = tfInstansi.getText();
-            int status = cbStatus.getSelectedIndex();
-            
+        int status = cbStatus.getSelectedIndex(); // Jika kamu pakai nanti
+
+        // Validasi: pastikan semua ID terisi
+        if (id_guru <= 0 || id_siswa <= 0 || id_instansi <= 0) {
+            JOptionPane.showMessageDialog(this, "Pastikan guru, siswa, dan instansi telah dipilih.");
+            return;
+        }
+
+        // Konfirmasi
+        int konfirmasi = JOptionPane.showConfirmDialog(
+            this,
+            "Apakah Anda yakin ingin menambahkan data monitoring ini?",
+            "Konfirmasi Tambah Monitoring",
+            JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (konfirmasi == JOptionPane.OK_OPTION) {
+            // Buat objek model
             Monitoring monitoringTambah = new Monitoring();
-            monitoringTambah.setGuru_id(Integer.parseInt(idGuru));
-            monitoringTambah.setSiswa_id(Integer.parseInt(idSiswa));
-            monitoringTambah.setIsntansi_id(Integer.parseInt(idInstansi));
-            
-            //Controller
+            monitoringTambah.setGuru_id(id_guru);
+            monitoringTambah.setSiswa_id(id_siswa);
+            monitoringTambah.setIsntansi_id(id_instansi);
+            // monitoringTambah.setStatus(status); // Tambahkan jika diperlukan
+
+            // Simpan lewat controller
             controller.tambahMonitoring(monitoringTambah);
 
-            // Bersihkan form
+            // Reset & refresh
             resetForm();
-
             tampilDataKeTabel();
+        } else {
+            // Batal ditekan
+            System.out.println("Penambahan monitoring dibatalkan.");
+        }
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
         int selectedRow = tblDataMonitoring.getSelectedRow();
         if (selectedRow >= 0) {
             int id = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 0).toString());
-            String idSiswa = tfNama.getText();
-            String idGuru = tfGUru.getText();
-            String idInstansi = tfInstansi.getText();
             int status = cbStatus.getSelectedIndex();
             
             Monitoring monitoringEdit = new Monitoring();
-            monitoringEdit.setGuru_id(Integer.parseInt(idGuru));
-            monitoringEdit.setIsntansi_id(Integer.parseInt(idInstansi));
-            monitoringEdit.setSiswa_id(Integer.parseInt(idSiswa));
+            monitoringEdit.setGuru_id(id_guru);
+            monitoringEdit.setIsntansi_id(id_instansi);
+            monitoringEdit.setSiswa_id(id_siswa);
             monitoringEdit.setId(id);
             
             
@@ -472,6 +489,33 @@ public class DataMonitoring extends javax.swing.JFrame {
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnPilihSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihSiswaActionPerformed
+        // TODO add your handling code here:
+        PilihSiswa dialogSiswa = new PilihSiswa(this, rootPaneCheckingEnabled);
+        dialogSiswa.setVisible(true);
+        id_siswa = dialogSiswa.getSelectedIdSiswa();
+        
+        btnPilihSiswa.setText(controller.getNamaSiswaById(id_siswa));
+    }//GEN-LAST:event_btnPilihSiswaActionPerformed
+
+    private void btnPilihInstansiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihInstansiActionPerformed
+        // TODO add your handling code here:
+        PiliihInstansi dialoInstansi = new PiliihInstansi(this, rootPaneCheckingEnabled);
+        dialoInstansi.setVisible(true);
+        id_instansi= dialoInstansi.getSelectedIdInstansi();
+        
+        btnPilihSiswa.setText(controller.getNamaSiswaById(id_siswa));
+    }//GEN-LAST:event_btnPilihInstansiActionPerformed
+
+    private void btnPilihGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihGuruActionPerformed
+        // TODO add your handling code here:
+        PilihGuru dialogGuru = new PilihGuru(this, rootPaneCheckingEnabled);
+        dialogGuru.setVisible(true);
+        id_guru = dialogGuru.getSelectedIdGuru();
+        
+        btnPilihSiswa.setText(controller.getNamaSiswaById(id_siswa));
+    }//GEN-LAST:event_btnPilihGuruActionPerformed
 
     /**
      * @param args the command line arguments
@@ -515,6 +559,9 @@ public class DataMonitoring extends javax.swing.JFrame {
     private javax.swing.JButton bLihatPresensi;
     private javax.swing.JButton bSimpan;
     private javax.swing.JButton bTambah;
+    private javax.swing.JButton btnPilihGuru;
+    private javax.swing.JButton btnPilihInstansi;
+    private javax.swing.JButton btnPilihSiswa;
     private javax.swing.JComboBox<String> cbStatus;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -528,10 +575,7 @@ public class DataMonitoring extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblDataMonitoring;
-    private javax.swing.JTextField tfGUru;
-    private javax.swing.JTextField tfInstansi;
     private javax.swing.JTextField tfMulai;
-    private javax.swing.JTextField tfNama;
     private javax.swing.JTextField tfSelesai;
     // End of variables declaration//GEN-END:variables
 }

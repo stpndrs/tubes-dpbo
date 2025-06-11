@@ -27,31 +27,17 @@ import scala.Int;
             super("Data Siswa");
             initComponents();
             controller = new SiswaController(); // menghubungkan ke Controller
-            tblDataSiswa.getSelectionModel().addListSelectionListener(e -> {
-                if (!e.getValueIsAdjusting() && tblDataSiswa.getSelectedRow() != -1) {
-                    int row = tblDataSiswa.getSelectedRow();
-                    String jenisKelamin = tblDataSiswa.getValueAt(row, 4).toString();
-                    int nmrJenisKelamin = Integer.parseInt(jenisKelamin) - 1;
+            
+            // Menyembunyikan kolom pertama (indeks 0)
+            tblDataSiswa.getColumnModel().getColumn(0).setMinWidth(0);
+            tblDataSiswa.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblDataSiswa.getColumnModel().getColumn(0).setWidth(0);
 
-                    tfNama.setText(tblDataSiswa.getValueAt(row, 1).toString());
-                    tfAlamat.setText(tblDataSiswa.getValueAt(row, 2).toString());
-                    tfNisn.setText(tblDataSiswa.getValueAt(row, 3).toString());
-                    cbJenisKelamin.setSelectedIndex(nmrJenisKelamin);
-                    tfKelas.setText(tblDataSiswa.getValueAt(row, 5).toString());
-
-                    // Nonaktifkan tombol Tambah
-                    bTambah.setEnabled(false);
-
-                    // Aktifkan tombol Edit dan Hapus
-                    bEdit.setEnabled(true);
-                    bCancle.setEnabled(true);
-                }
-            });
             resetForm();
             tampilDataKeTabel();
         }
 
-        private void tampilDataKeTabel() {
+    private void tampilDataKeTabel() {
         DefaultTableModel model = (DefaultTableModel) tblDataSiswa.getModel();
         model.setRowCount(0); // Bersihkan tabel sebelum isi
 
@@ -91,7 +77,7 @@ import scala.Int;
 
         // Tombol kembali ke default
         bTambah.setEnabled(true);
-        bEdit.setEnabled(false);
+        bEdit.setEnabled(true);
         bSimpan.setVisible(false);
         bCancle.setVisible(false);
     }
@@ -369,35 +355,37 @@ import scala.Int;
         // TODO add your handling code here:
         int selectedRow = tblDataSiswa.getSelectedRow();
 
-    if (selectedRow >= 0) {
-        // Ambil data dari kolom pada baris yang dipilih
-        int id_siswa = Integer.parseInt(tblDataSiswa.getValueAt(selectedRow, 0).toString());
-        String nama = tblDataSiswa.getValueAt(selectedRow, 1).toString();
-        String alamat = tblDataSiswa.getValueAt(selectedRow, 2).toString();
-        String nisn = tblDataSiswa.getValueAt(selectedRow, 3).toString();
-        String jenisKelamin = tblDataSiswa.getValueAt(selectedRow, 4).toString();
-        String kelas = tblDataSiswa.getValueAt(selectedRow, 5).toString();
+        if (selectedRow >= 0) {
 
-        // Tampilkan ke form
-        tfNama.setText(nama);
-        tfAlamat.setText(alamat);
-        tfNisn.setText(nisn);
-        cbJenisKelamin.setSelectedIndex(Integer.parseInt(jenisKelamin) - 1);
-        tfKelas.setText(kelas);
 
-        // Tampilkan tombol simpan & cancel
-        bSimpan.setVisible(true);
-        bCancle.setVisible(true);
-        
-        // Simpan row index yang diedit ke variable tersembunyi
-        tblDataSiswa.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
-    } else {
-        JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
+            // Ambil data dari kolom pada baris yang dipilih
+            int id_siswa = Integer.parseInt(tblDataSiswa.getValueAt(selectedRow, 0).toString());
+            String nama = tblDataSiswa.getValueAt(selectedRow, 1).toString();
+            String alamat = tblDataSiswa.getValueAt(selectedRow, 2).toString();
+            String nisn = tblDataSiswa.getValueAt(selectedRow, 3).toString();
+            String jenisKelamin = tblDataSiswa.getValueAt(selectedRow, 4).toString();
+            String kelas = tblDataSiswa.getValueAt(selectedRow, 5).toString();
+
+            // Tampilkan ke form
+            tfNama.setText(nama);
+            tfAlamat.setText(alamat);
+            tfNisn.setText(nisn);
+            cbJenisKelamin.setSelectedIndex(Integer.parseInt(jenisKelamin) - 1);
+            tfKelas.setText(kelas);
+
+            // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
+            bSimpan.setVisible(true);
+            bCancle.setVisible(true);
+            bTambah.setEnabled(false);
+
+            // Simpan row index yang diedit ke variable tersembunyi
+            tblDataSiswa.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit terlebih dahulu.");
         }
     }//GEN-LAST:event_bEditActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-        // TODO add your handling code here:
         String nama = tfNama.getText();
         String alamat = tfAlamat.getText();
         String nisn = tfNisn.getText();
@@ -408,15 +396,29 @@ import scala.Int;
             JOptionPane.showMessageDialog(this, "Mohon lengkapi semua data.");
             return;
         }
-        
-        //MODEL
-        Siswa siswaBaru = new Siswa(jenisKelamin, nama, alamat, nisn, kelas);
-        
-        //CONTROLLER
-        SiswaController.tambahSiswa(siswaBaru);
-        
-        resetForm();
-        tampilDataKeTabel();
+
+        // Konfirmasi sebelum simpan
+        int konfirmasi = JOptionPane.showConfirmDialog(
+            this,
+            "Apakah Anda yakin ingin menambahkan siswa \"" + nama + "\"?",
+            "Konfirmasi Tambah Siswa",
+            JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (konfirmasi == JOptionPane.OK_OPTION) {
+            // MODEL
+            Siswa siswaBaru = new Siswa(jenisKelamin, nama, alamat, nisn, kelas);
+
+            // CONTROLLER
+            SiswaController.tambahSiswa(siswaBaru);
+
+            // Reset form & refresh tabel
+            resetForm();
+            tampilDataKeTabel();
+        } else {
+            //  Batal ditekan
+            System.out.println("Penambahan siswa dibatalkan.");
+        }
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
