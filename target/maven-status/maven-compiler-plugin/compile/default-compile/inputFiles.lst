@@ -13,6 +13,7 @@ C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Controller\SiswaController.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewGuru\DetailPresensi.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Controller\GuruController.java
+C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewAdmin\DashBoardAdmin.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewAdmin\DataSiswa.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Controller\UserController.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewAdmin\LihatPresensiAdmin.java
@@ -22,14 +23,16 @@ C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Session\Session.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\View\InputUser.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewSiswa\presensiDanKegiatan.java
+C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewSiswa\DashBoardSiswa.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Model\Presensi.java
+C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewGuru\DashBoardGuru.java
+C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewInstansi\DashBoardInstansi.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\View\inputMonitoring.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewInstansi\MonitoringForInstansi.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\View\InputInstansi.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Controller\InstansiController.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\MissionUtil\Util.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Model\Instansi.java
-C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\ViewAdmin\DashBoard.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\View\InputGuru.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\Model\Monitoring.java
 C:\Users\Pongo\OneDrive - Telkom University\Documents\NetBeansProjects\TestDbPkl\src\main\java\View\InputSiswa.java

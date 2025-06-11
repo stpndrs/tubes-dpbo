@@ -4,12 +4,12 @@
  */
 package ViewLogin;
 
-import ViewGuru.MonotiringForGuru;
-import ViewInstansi.MonitoringForInstansi;
-import ViewSiswa.presensiDanKegiatan;
+import ViewGuru.DashBoardGuru;
+import ViewInstansi.DashBoardInstansi;
+import ViewSiswa.DashBoardSiswa;
 import Login.AuthService;
 import Session.Session;
-import ViewAdmin.DashBoard;
+import ViewAdmin.DashBoardAdmin;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
@@ -150,25 +150,25 @@ public class LoginView extends javax.swing.JFrame {
         
         if (role==1) {
             // to admin dashboard
-            DashBoard admin = new DashBoard();
+            DashBoardAdmin admin = new DashBoardAdmin();
             admin.setVisible(true);
             this.dispose();
         }
         if(role==2){
             Session.sessionSiswa();
-            presensiDanKegiatan siswa = new presensiDanKegiatan();
+            DashBoardSiswa siswa = new DashBoardSiswa();
             siswa.setVisible(true);
             this.dispose();
         }
         if(role==3){
             Session.sessionGuru();
-            MonotiringForGuru guru = new MonotiringForGuru();
+            DashBoardGuru guru = new DashBoardGuru();
             guru.setVisible(true);
             this.dispose();
         }
         if(role==4){
             Session.sessionInstansi();
-            MonitoringForInstansi guru = new MonitoringForInstansi();
+            DashBoardInstansi guru = new DashBoardInstansi();
             guru.setVisible(true);
             this.dispose();
         }

@@ -406,7 +406,7 @@ public class DataPenguna extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        DashBoard menu = new DashBoard();
+        DashBoardAdmin menu = new DashBoardAdmin();
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed

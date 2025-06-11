@@ -213,41 +213,41 @@ public class MonitoringController {
         }
     }
     
-    public static int getSiswaIdByMonitoringId(int monitoringId) {
-        String query = "SELECT siswa_id FROM monitoring WHERE id = ?";
-        try (var conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, monitoringId);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("siswa_id");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Gagal mengambil siswa_id: " + e.getMessage());
-        }
-        return -1; // Jika tidak ditemukan
-    }
+//    public static int getSiswaIdByMonitoringId(int monitoringId) {
+//        String query = "SELECT siswa_id FROM monitoring WHERE id = ?";
+//        try (var conn = DBConnection.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(query)) {
+//
+//            stmt.setInt(1, monitoringId);
+//            ResultSet rs = stmt.executeQuery();
+//
+//            if (rs.next()) {
+//                return rs.getInt("siswa_id");
+//            }
+//
+//        } catch (SQLException e) {
+//            System.err.println("Gagal mengambil siswa_id: " + e.getMessage());
+//        }
+//        return -1; // Jika tidak ditemukan
+//    }
     
-    public static int getGuruIdByMonitoringId(int monitoringId) {
-        String query = "SELECT guru_id FROM monitoring WHERE id = ?";
-        try (var conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, monitoringId);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("guru_id");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Gagal mengambil guru_id: " + e.getMessage());
-        }
-        return -1;
-    }
+//    public static int getGuruIdByMonitoringId(int monitoringId) {
+//        String query = "SELECT guru_id FROM monitoring WHERE id = ?";
+//        try (var conn = DBConnection.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(query)) {
+//
+//            stmt.setInt(1, monitoringId);
+//            ResultSet rs = stmt.executeQuery();
+//
+//            if (rs.next()) {
+//                return rs.getInt("guru_id");
+//            }
+//
+//        } catch (SQLException e) {
+//            System.err.println("Gagal mengambil guru_id: " + e.getMessage());
+//        }
+//        return -1;
+//    }
     
     public static int getInstansiIdByMonitoringId(int monitoringId) {
         String query = "SELECT instansi_id FROM monitoring WHERE id = ?";
