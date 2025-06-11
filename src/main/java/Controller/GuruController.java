@@ -60,4 +60,11 @@ public class GuruController {
             System.err.println("Error saat menambahkan guru: " + e.getMessage());
         }
     }
+    
+    public String konversiJenisKelamin(int jk){
+        if(jk == 1){
+            return "Laki-Laki";
+        }
+        return "Prempuan";
+    }
 }

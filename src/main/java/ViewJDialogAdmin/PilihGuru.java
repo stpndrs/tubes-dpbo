@@ -25,6 +25,11 @@ public class PilihGuru extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
+        // Menyembunyikan kolom pertama (indeks 0)
+        tblDataGuru.getColumnModel().getColumn(0).setMinWidth(0);
+        tblDataGuru.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblDataGuru.getColumnModel().getColumn(0).setWidth(0);
+        
         tampilDataKeTabel();
     }
     

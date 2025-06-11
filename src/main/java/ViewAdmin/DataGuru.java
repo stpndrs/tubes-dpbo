@@ -74,7 +74,7 @@ public class DataGuru extends javax.swing.JFrame {
                 String nama = rs.getString("nama");
                 String alamat = rs.getString("alamat");
                 String nip = rs.getString("nip");
-                int jenisKelamin = rs.getInt("jenis_kelamin");
+                String jenisKelamin = controller.konversiJenisKelamin(rs.getInt("jenis_kelamin"));
 
                 model.addRow(new Object[]{id, nama, alamat, jenisKelamin, nip});
             }

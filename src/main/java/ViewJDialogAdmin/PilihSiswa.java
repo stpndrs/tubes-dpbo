@@ -24,6 +24,12 @@ public class PilihSiswa extends javax.swing.JDialog {
     public PilihSiswa(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        // Menyembunyikan kolom pertama (indeks 0)
+        tblDataSiswa.getColumnModel().getColumn(0).setMinWidth(0);
+        tblDataSiswa.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblDataSiswa.getColumnModel().getColumn(0).setWidth(0);
+        
         tampilDataKeTabel();
     }
     

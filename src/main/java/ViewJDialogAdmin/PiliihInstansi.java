@@ -24,6 +24,13 @@ public class PiliihInstansi extends javax.swing.JDialog {
     public PiliihInstansi(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        // Menyembunyikan kolom pertama (indeks 0)
+        tblDataInstansi.getColumnModel().getColumn(0).setMinWidth(0);
+        tblDataInstansi.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblDataInstansi.getColumnModel().getColumn(0).setWidth(0);
+        
+        tampilDataKeTabel();
     }
     
     private void tampilDataKeTabel() {

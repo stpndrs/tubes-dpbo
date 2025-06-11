@@ -393,9 +393,9 @@ public class DataMonitoring extends javax.swing.JFrame {
         //Tampilkan ke form
         int idMonitoring = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 0).toString());
         String namaSiswa = tblDataMonitoring.getValueAt(selectedRow, 1).toString();
-        String namaInstansi = tblDataMonitoring.getValueAt(selectedRow, 6).toString();
-        String namGuru = tblDataMonitoring.getValueAt(selectedRow, 5).toString();
-        btnPilihGuru.setText(namGuru);
+        String namaGuru = tblDataMonitoring.getValueAt(selectedRow, 6).toString();
+        String namaInstansi = tblDataMonitoring.getValueAt(selectedRow, 5).toString();
+        btnPilihGuru.setText(namaGuru);
         btnPilihInstansi.setText(namaInstansi);
         btnPilihSiswa.setText(namaSiswa);
         
@@ -492,7 +492,7 @@ public class DataMonitoring extends javax.swing.JFrame {
 
     private void btnPilihSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihSiswaActionPerformed
         // TODO add your handling code here:
-        PilihSiswa dialogSiswa = new PilihSiswa(this, rootPaneCheckingEnabled);
+        PilihSiswa dialogSiswa = new PilihSiswa(this, true);
         dialogSiswa.setVisible(true);
         id_siswa = dialogSiswa.getSelectedIdSiswa();
         
@@ -501,20 +501,20 @@ public class DataMonitoring extends javax.swing.JFrame {
 
     private void btnPilihInstansiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihInstansiActionPerformed
         // TODO add your handling code here:
-        PiliihInstansi dialoInstansi = new PiliihInstansi(this, rootPaneCheckingEnabled);
+        PiliihInstansi dialoInstansi = new PiliihInstansi(this, true);
         dialoInstansi.setVisible(true);
         id_instansi= dialoInstansi.getSelectedIdInstansi();
         
-        btnPilihSiswa.setText(controller.getNamaSiswaById(id_siswa));
+        btnPilihInstansi.setText(controller.getNamaInstansiById(id_instansi));
     }//GEN-LAST:event_btnPilihInstansiActionPerformed
 
     private void btnPilihGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihGuruActionPerformed
         // TODO add your handling code here:
-        PilihGuru dialogGuru = new PilihGuru(this, rootPaneCheckingEnabled);
+        PilihGuru dialogGuru = new PilihGuru(this, true);
         dialogGuru.setVisible(true);
         id_guru = dialogGuru.getSelectedIdGuru();
         
-        btnPilihSiswa.setText(controller.getNamaSiswaById(id_siswa));
+        btnPilihGuru.setText(controller.getNamaGuruById(id_guru));
     }//GEN-LAST:event_btnPilihGuruActionPerformed
 
     /**

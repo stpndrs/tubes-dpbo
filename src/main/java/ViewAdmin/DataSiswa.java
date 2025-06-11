@@ -52,7 +52,7 @@ import scala.Int;
                 String nama = rs.getString("nama");
                 String alamat = rs.getString("alamat");
                 String nisn = rs.getString("nisn");
-                int jenisKelamin = rs.getInt("jenis_kelamin");
+                String jenisKelamin = SiswaController.konversiJenisKelamin(rs.getInt("jenis_kelamin"));
                 String kelas = rs.getString("kelas");
 
                 model.addRow(new Object[]{id, nama, alamat, nisn, jenisKelamin, kelas});

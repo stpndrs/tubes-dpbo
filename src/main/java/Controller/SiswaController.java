@@ -59,4 +59,11 @@ public class SiswaController {
             System.err.println("Error saat menambahkan siswa: " + e.getMessage());
         }
     }
+    
+    public static String konversiJenisKelamin(int jk){
+        if(jk == 1){
+            return "Laki-Laki";
+        }
+        return "Prempuan";
+    }
 }
