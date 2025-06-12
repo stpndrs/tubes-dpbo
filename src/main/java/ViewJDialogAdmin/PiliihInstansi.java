@@ -49,8 +49,9 @@ public class PiliihInstansi extends javax.swing.JDialog {
                 String alamat = rs.getString("alamat");
                 String telepon = rs.getString("telepon");
                 int kuota = rs.getInt("kuota");
+                String pembimbing_instansi = rs.getString("pembimbing_instansi");
 
-                model.addRow(new Object[]{id, nama, alamat, telepon, kuota});
+                model.addRow(new Object[]{id, nama, alamat, telepon, kuota, pembimbing_instansi});
             }
 
             rs.close();
@@ -80,21 +81,21 @@ public class PiliihInstansi extends javax.swing.JDialog {
 
         tblDataInstansi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "id", "Nama", "Alamat", "Telepon", "sisa kuota"
+                "id", "Nama", "Alamat", "Telepon", "sisa kuota", "pembimbing_instansi"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true
+                false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {

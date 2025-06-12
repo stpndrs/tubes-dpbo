@@ -24,7 +24,7 @@ import scala.Int;
 public class DataMonitoring extends javax.swing.JFrame {
 
     private MonitoringController controller;
-    private int id_siswa, id_guru, id_instansi;
+    private int id_siswa = 0, id_guru = 0, id_instansi = 0;
      
     public DataMonitoring() {
         super("Data Monitoring");
@@ -76,6 +76,7 @@ public class DataMonitoring extends javax.swing.JFrame {
             rs.close();
             stmt.close();
             conn.close();
+            resetForm();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
         }
@@ -88,6 +89,10 @@ public class DataMonitoring extends javax.swing.JFrame {
         tfMulai.setText("");
         tfSelesai.setText("");
         cbStatus.setSelectedIndex(0);
+        
+        id_guru = 0;
+        id_siswa = 0;
+        id_instansi = 0;
 
         tblDataMonitoring.clearSelection(); // hapus seleksi di tabel
 
@@ -381,7 +386,7 @@ public class DataMonitoring extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bLihatPresensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLihatPresensiActionPerformed
-        new LihatPresensiAdmin().setVisible(true);
+        new LihatPresensiAdmin(id_siswa).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_bLihatPresensiActionPerformed
 
@@ -393,11 +398,17 @@ public class DataMonitoring extends javax.swing.JFrame {
         //Tampilkan ke form
         int idMonitoring = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 0).toString());
         String namaSiswa = tblDataMonitoring.getValueAt(selectedRow, 1).toString();
+        String waktu_mulai = tblDataMonitoring.getValueAt(selectedRow, 2).toString();
+        String wakt_selesai = tblDataMonitoring.getValueAt(selectedRow, 3).toString();
+        int nmrStatus = Integer.parseInt(tblDataMonitoring.getValueAt(selectedRow, 4).toString());
         String namaGuru = tblDataMonitoring.getValueAt(selectedRow, 6).toString();
         String namaInstansi = tblDataMonitoring.getValueAt(selectedRow, 5).toString();
         btnPilihGuru.setText(namaGuru);
         btnPilihInstansi.setText(namaInstansi);
         btnPilihSiswa.setText(namaSiswa);
+        cbStatus.setSelectedIndex(nmrStatus);
+        tfMulai.setText(waktu_mulai);
+        tfSelesai.setText(wakt_selesai);
         
         //Jika tidak ada perubahan
         id_guru = controller.getIdGuruByMonitoringId(idMonitoring);
@@ -465,6 +476,12 @@ public class DataMonitoring extends javax.swing.JFrame {
             monitoringEdit.setSiswa_id(id_siswa);
             monitoringEdit.setId(id);
             
+            monitoringEdit.setMulai(tfMulai.getText());
+            monitoringEdit.setSelesai(tfSelesai.getText());
+            
+            if(monitoringEdit.getMulai() != null || monitoringEdit.getSelesai() != null){
+                controller.setTanggalMonitoring(monitoringEdit);
+            } 
             
             //Controller
             controller.editMonitoring(monitoringEdit);

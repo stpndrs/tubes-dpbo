@@ -10,6 +10,7 @@ package Model;
  */
 public class Monitoring {
     private int id, status, siswa_id, guru_id, isntansi_id;
+    private String mulai, selesai;
 
     public Monitoring(int siswa_id, int instansi_id, int guru_id) {
         this.siswa_id = siswa_id;
@@ -18,6 +19,22 @@ public class Monitoring {
     }
     
     public Monitoring(){
+    }
+
+    public void setMulai(String mulai) {
+        this.mulai = mulai;
+    }
+
+    public void setSelesai(String selesai) {
+        this.selesai = selesai;
+    }
+
+    public String getMulai() {
+        return mulai;
+    }
+
+    public String getSelesai() {
+        return selesai;
     }
 
     public int getId() {

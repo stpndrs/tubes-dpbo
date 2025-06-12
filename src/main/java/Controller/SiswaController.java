@@ -5,9 +5,11 @@
 package Controller;
 
 import DataBase.DBConnection;
-//import com.mycompany.testdbpkl.Connection;
 import Model.Siswa;
+import Model.User;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SiswaController {
@@ -37,15 +39,26 @@ public class SiswaController {
     }
     
     public static void tambahSiswa(Siswa siswa) {
-        String query = "INSERT INTO siswa (nama, alamat, nisn, kelas, jenis_kelamin) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO siswa (nama, alamat, nisn, kelas, jenis_kelamin, user_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
+            //BUAT USER DULU
+            User user = new User(siswa.getNama(), siswa.getNisn(), siswa.getNisn(), 2);
+            UserController.tambahUser(user);
+            
+            //AMBIL USER ID  
+            int user_id_siswa = getUserIdByUsername(user.getUsername());
+            
+            //MASUKKAN USER ID NYA
+            siswa.setUser_id(user_id_siswa);
+            
             PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
             stmt.setString(1, siswa.getNama());
             stmt.setString(2, siswa.getAlamat());
             stmt.setString(3, siswa.getNisn());
             stmt.setString(4, siswa.getKelas());
             stmt.setInt(5, siswa.getJenis_kelamin());
+            stmt.setInt(6, siswa.getUser_id());
 
             int rows = stmt.executeUpdate();
             if (rows > 0) {
@@ -66,4 +79,25 @@ public class SiswaController {
         }
         return "Prempuan";
     }
+    
+    public static int getUserIdByUsername(String username){
+        int IdUser = 0;
+        try {
+            Connection conn = DBConnection.getConnection();
+            String query = "SELECT id FROM user WHERE username = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                IdUser = rs.getInt("id");
+            }
+            rs.close();
+            stmt.close();
+            System.out.println("User id  : " + IdUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return IdUser;
+    }
+    
 }

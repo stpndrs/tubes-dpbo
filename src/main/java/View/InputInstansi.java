@@ -13,7 +13,8 @@ public class InputInstansi {
         String alamat = Util.inputString("Alamat: ");
         String telpon = Util.inputString("Telpon: ");
         int kouta = Util.inputInt("Kouta: ");
+        String pembimbing_instansi = Util.inputString("Masukkan pembimbing instansi: ");
 
-        return new Instansi(kouta, nama, alamat, telpon);
+        return new Instansi(kouta, nama, alamat, telpon, pembimbing_instansi);
     }
 }

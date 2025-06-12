@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserController {
+
     public static void tambahUser(User user) {
         String query = "INSERT INTO User (nama, username, password, role) VALUES (?, ?, ?, ?)";
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
@@ -37,13 +38,12 @@ public class UserController {
             System.err.println("Error saat menambahkan siswa: " + e.getMessage());
         }
     }
-    
+
     public static boolean gantiPassword(int userId, String passwordLama, String passwordBaru) {
         String querySelect = "SELECT password FROM user WHERE id = ?";
         String queryUpdate = "UPDATE user SET password = ? WHERE id = ?";
 
-        try (var conn = DBConnection.getConnection();
-             PreparedStatement stmtSelect = conn.prepareStatement(querySelect)) {
+        try (var conn = DBConnection.getConnection(); PreparedStatement stmtSelect = conn.prepareStatement(querySelect)) {
 
             stmtSelect.setInt(1, userId);
             ResultSet rs = stmtSelect.executeQuery();
@@ -76,48 +76,73 @@ public class UserController {
             return false;
         }
     }
-    
+
     public static boolean gantiPasswordAdmin(int userId, String passwordBaru) {
-    String queryUpdate = "UPDATE user SET password = ? WHERE id = ?";
+        String queryUpdate = "UPDATE user SET password = ? WHERE id = ?";
 
-    try (var conn = DBConnection.getConnection();
-         PreparedStatement stmtUpdate = conn.prepareStatement(queryUpdate)) {
+        try (var conn = DBConnection.getConnection(); PreparedStatement stmtUpdate = conn.prepareStatement(queryUpdate)) {
 
-        // Hash password baru
-        String hashedBaru = BCrypt.hashpw(passwordBaru, BCrypt.gensalt());
+            // Hash password baru
+            String hashedBaru = BCrypt.hashpw(passwordBaru, BCrypt.gensalt());
 
-        stmtUpdate.setString(1, hashedBaru);
-        stmtUpdate.setInt(2, userId);
-        int rowsUpdated = stmtUpdate.executeUpdate();
+            stmtUpdate.setString(1, hashedBaru);
+            stmtUpdate.setInt(2, userId);
+            int rowsUpdated = stmtUpdate.executeUpdate();
 
-        return rowsUpdated > 0;
+            return rowsUpdated > 0;
 
-    } catch (SQLException e) {
-        System.err.println("Gagal mengganti password oleh admin: " + e.getMessage());
-        return false;
+        } catch (SQLException e) {
+            System.err.println("Gagal mengganti password oleh admin: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static void editUser(User user) {
+        String query = "UPDATE User SET nama = ?, username = ?, role = ? WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
+            stmt.setString(1, user.getNama());
+            stmt.setString(2, user.getUsername());
+            stmt.setInt(3, user.getRole());
+            stmt.setInt(4, user.getId());
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Data user berhasil diperbarui (tanpa mengubah password).");
+            } else {
+                System.out.println("User tidak ditemukan.");
+            }
+
+            stmt.close();
+        } catch (Exception e) {
+            System.err.println("Gagal memperbarui user: " + e.getMessage());
         }
     }
     
-    public static void editUser(User user) {
-    String query = "UPDATE User SET nama = ?, username = ?, role = ? WHERE id = ?";
-
-    try {
-        PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
-        stmt.setString(1, user.getNama());
-        stmt.setString(2, user.getUsername());
-        stmt.setInt(3, user.getRole());
-        stmt.setInt(4, user.getId());
-
-        int rowsUpdated = stmt.executeUpdate();
-        if (rowsUpdated > 0) {
-            System.out.println("Data user berhasil diperbarui (tanpa mengubah password).");
-        } else {
-            System.out.println("User tidak ditemukan.");
+    public String konversiROle(int role){
+        if(role == 1){
+            return "Admin";
         }
-
-        stmt.close();
-    } catch (Exception e) {
-        System.err.println("Gagal memperbarui user: " + e.getMessage());
+        if(role == 2){
+            return "Siswa";
+        }
+        if(role == 3){
+            return "Guru";
+        }
+        return "Instansi";
     }
-}
+    
+    public int konversiKembali(String role){
+        if(role.equals("Admin")){
+            return 1;
+        }
+        if(role.equals("Siswa")){
+            return 2;
+        }
+        if(role.equals("Guru")){
+            return 3;
+        }
+        return 4;
+    }
 }

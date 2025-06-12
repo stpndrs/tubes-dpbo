@@ -14,74 +14,82 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 import scala.Int;
+
 /**
  *
  * @author Axioo Pongo
  */
 public class presensiDanKegiatan extends javax.swing.JFrame {
+
     private PresensiController controller;
     private int id_presensi;
+
     /**
      * Creates new form presensiDanKegiatan
      */
     public presensiDanKegiatan() {
-        
-        this.controller = new Controller.PresensiController();
-        
+
+        controller = new Controller.PresensiController();
+
         initComponents();
         
-        btnKepulangan.setEnabled(false);
-        tblPresensi.getSelectionModel().addListSelectionListener(e -> {
-                if (!e.getValueIsAdjusting() && tblPresensi.getSelectedRow() != -1) {
-                    int row = tblPresensi.getSelectedRow();
-                    id_presensi = Integer.parseInt(tblPresensi.getValueAt(row, 0).toString());
-                }
-                cbStatus.setEnabled(false);
-                tfKegiatan.setEnabled(false);
-                btnKepulangan.setEnabled(true);
-            });
-        
         tampilkanDataKeTabel(Session.getId_siswa());
+        
+        tblPresensi.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = tblPresensi.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Baris dipilih -> matikan tombol
+                    btnTambah.setEnabled(false);
+                    btnKepulangan.setEnabled(true);
+                } else {
+                    // Tidak ada baris yang dipilih -> aktifkan kembali
+                    btnTambah.setEnabled(true);
+                    cbStatus.setEnabled(true);
+                    tfKegiatan.setEnabled(true);
+                    btnKepulangan.setEnabled(false);
+                }
+            }
+        });
     }
-    
+
     private void tampilkanDataKeTabel(int siswaId) {
-    DefaultTableModel model = (DefaultTableModel) tblPresensi.getModel();
-    model.setRowCount(0); // Bersihkan tabel
+        DefaultTableModel model = (DefaultTableModel) tblPresensi.getModel();
+        model.setRowCount(0); // Bersihkan tabel
 
-    String sql = "SELECT p.id, p.tanggal, p.status, p.jam_masuk, p.jam_keluar, p.keterangan " +
-                 "FROM presensi p " +
-                 "JOIN monitoring m ON p.Monitoring_id = m.id " +
-                 "WHERE m.siswa_id = ?";
+        String sql = "SELECT p.id, p.tanggal, p.status, p.jam_masuk, p.jam_keluar, p.keterangan "
+                + "FROM presensi p "
+                + "JOIN monitoring m ON p.Monitoring_id = m.id "
+                + "WHERE m.siswa_id = ?";
 
-    try (Connection conn = DBConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        stmt.setInt(1, siswaId);
-        ResultSet rs = stmt.executeQuery();
+            stmt.setInt(1, siswaId);
+            ResultSet rs = stmt.executeQuery();
 
-        while (rs.next()) {
-            int id = rs.getInt(siswaId);
-            String tanggal = rs.getString("tanggal");
-            int statusCode = rs.getInt("status");
-            String jamMasuk = rs.getString("jam_masuk");
-            String jamKeluar = rs.getString("jam_keluar");
-            String keterangan = rs.getString("keterangan");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String tanggal = rs.getString("tanggal");
+                int statusCode = rs.getInt("status");
+                String jamMasuk = rs.getString("jam_masuk");
+                String jamKeluar = rs.getString("jam_keluar");
+                String keterangan = rs.getString("keterangan");
 
-            // Ubah status ke bentuk teks (misalnya: 0 = Alpha, 1 = Hadir, dll)
-            String status = controller.statusPresensi(statusCode);
+                // Ubah status ke bentuk teks (misalnya: 0 = Alpha, 1 = Hadir, dll)
+                String status = controller.statusPresensi(statusCode);
 
-            model.addRow(new Object[]{id, tanggal, status, jamMasuk, jamKeluar, keterangan});
+                model.addRow(new Object[]{id, tanggal, status, jamMasuk, jamKeluar, keterangan});
+            }
+            if (PresensiController.cekJamPulang(id_presensi)) {
+                btnKepulangan.setEnabled(true);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
         }
-
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
     }
-}
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -133,7 +141,7 @@ public class presensiDanKegiatan extends javax.swing.JFrame {
         tfKegiatan.setRows(5);
         jScrollPane2.setViewportView(tfKegiatan);
 
-        cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0. Alpha", "1. Hadir", "2. Sakit", "3. Izin" }));
+        cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1. Hadir", "2. Izin" }));
 
         jButton1.setText("Cancle");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -229,11 +237,17 @@ public class presensiDanKegiatan extends javax.swing.JFrame {
         resetForm();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public void resetForm(){
+    public void resetForm() {
         tfKegiatan.setText("");
         cbStatus.setSelectedIndex(0);
+        tblPresensi.clearSelection();
+
+        cbStatus.setEnabled(true);
+        tfKegiatan.setEnabled(true);
+
+        btnTambah.setEnabled(true);
     }
-    
+
     public presensiDanKegiatan(PresensiController controller, int id_presensi, JButton btnKepulangan, JButton btnTambah, JComboBox<String> cbStatus, JButton jButton1, JLabel jLabel1, JScrollPane jScrollPane1, JScrollPane jScrollPane2, JTable tblPresensi, JTextArea tfKegiatan) throws HeadlessException {
         this.controller = controller;
         this.id_presensi = id_presensi;
@@ -251,21 +265,28 @@ public class presensiDanKegiatan extends javax.swing.JFrame {
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
         String keterangan = tfKegiatan.getText();
-        int status = cbStatus.getSelectedIndex();
-        
+        int status = cbStatus.getSelectedIndex() + 1;
+
         Presensi presensi = new Presensi();
         presensi.setKeterangan(keterangan);
         presensi.setStatus(status);
         presensi.setMonitoring_id(controller.getMonitoringIdBySiswaId(Session.getId_siswa()));
-        
+
         PresensiController.masukkanDataPresensi(presensi);
         tampilkanDataKeTabel(Session.getId_siswa());
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnKepulanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKepulanganActionPerformed
         // TODO add your handling code here:
-        controller.setJamKeluar(id_presensi);
-        tampilkanDataKeTabel(Session.getId_siswa());
+        int row = tblPresensi.getSelectedRow();
+        id_presensi = Integer.parseInt(tblPresensi.getValueAt(row, 0).toString());
+        
+        if (! PresensiController.cekJamPulang(id_presensi)) {
+            controller.setJamKeluar(id_presensi);
+            tampilkanDataKeTabel(Session.getId_siswa());
+        } else {
+            JOptionPane.showMessageDialog(this, "Kamu telah mengisi kepulangan presensi tersebut");
+        }
     }//GEN-LAST:event_btnKepulanganActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

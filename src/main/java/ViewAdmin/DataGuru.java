@@ -31,24 +31,7 @@ public class DataGuru extends javax.swing.JFrame {
         super("Data Guru");
             initComponents();
             controller = new GuruController();// menghubungkan ke Controller
-//            tblDataGuru.getSelectionModel().addListSelectionListener(e -> {
-//                if (!e.getValueIsAdjusting() && tblDataGuru.getSelectedRow() != -1) {
-//                    int row = tblDataGuru.getSelectedRow();
-//                    int nmrJenisKelamin = Integer.parseInt(tblDataGuru.getValueAt(row, 3).toString()) - 1;
-//
-//                    tfNama.setText(tblDataGuru.getValueAt(row, 1).toString());
-//                    tfAlamat.setText(tblDataGuru.getValueAt(row, 2).toString());
-//                    tfNip.setText(tblDataGuru.getValueAt(row, 4).toString());
-//                    cbJenisKelamin.setSelectedIndex(nmrJenisKelamin);
-//
-//                    // Nonaktifkan tombol Tambah
-//                    bTambah.setEnabled(false);
-//
-//                    // Aktifkan tombol Edit dan Hapus
-//                    bEdit.setEnabled(true);
-//                    bCancle.setEnabled(true);
-//                }
-//            });
+            
             resetForm();
             
             // Menyembunyikan kolom pertama (indeks 0)
@@ -403,12 +386,17 @@ public class DataGuru extends javax.swing.JFrame {
         String alamat = tblDataGuru.getValueAt(selectedRow, 2).toString();
         String jenisKelamin = tblDataGuru.getValueAt(selectedRow, 3).toString();
         String nip = tblDataGuru.getValueAt(selectedRow, 4).toString();
+        
+        int nmrJK = 2;
+        if(jenisKelamin.equals("Laki-Laki")){
+           nmrJK = 1;
+        }
 
         // Tampilkan ke form
         tfNama.setText(nama);
         tfAlamat.setText(alamat);
         tfNip.setText(nip);
-        cbJenisKelamin.setSelectedItem(jenisKelamin);
+        cbJenisKelamin.setSelectedItem(nmrJK - 1);
 
         // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
         bSimpan.setVisible(true);

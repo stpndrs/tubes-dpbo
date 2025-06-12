@@ -53,7 +53,9 @@ public class DataPenguna extends javax.swing.JFrame {
                 int id = rs.getInt("id");
                 String nama = rs.getString("nama");
                 String username = rs.getString("username");
-                int role = rs.getInt("role");
+                int nmrRole = rs.getInt("role");
+                
+                String role = controller.konversiROle(nmrRole);
 
                 model.addRow(new Object[]{id, nama, username, role});
             }
@@ -345,11 +347,13 @@ public class DataPenguna extends javax.swing.JFrame {
             String nama = tblDataUser.getValueAt(selectedRow, 1).toString();
             String username = tblDataUser.getValueAt(selectedRow, 2).toString();
             String role = tblDataUser.getValueAt(selectedRow, 3).toString();
+            
+            int nmrRole = controller.konversiKembali(role);
 
             // Tampilkan ke form
             tfNama.setText(nama);
             tfUsername.setText(username);
-            cbRole.setSelectedItem(Integer.parseInt(role) - 1);
+            cbRole.setSelectedIndex(nmrRole - 1);
 
             // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
             bSimpan.setVisible(true);

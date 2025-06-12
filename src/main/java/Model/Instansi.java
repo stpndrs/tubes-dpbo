@@ -10,18 +10,35 @@ import java.util.ArrayList;
  */
 public class Instansi {
     private int id, kuota;
-    private String nama, alamat, telepon;
-    private User user_id;
+    private String nama, alamat, telepon, pembimbing;
+    private int user_id;
 
-    public Instansi(int kouta, String nama, String alamat, String telepon ) {
+    public Instansi(int kouta, String nama, String alamat, String telepon, String pembimbing) {
         this.kuota = kouta;
         this.nama = nama;
         this.alamat = alamat;
         this.telepon = telepon;
+        this.pembimbing = pembimbing;
     }
     
     public Instansi(){
         
+    }
+
+    public void setPembimbing(String pembimbing) {
+        this.pembimbing = pembimbing;
+    }
+
+    public String getPembimbing() {
+        return pembimbing;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
     }
 
     public int getId() {

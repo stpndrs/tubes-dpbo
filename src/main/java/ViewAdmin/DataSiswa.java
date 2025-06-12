@@ -365,12 +365,17 @@ import scala.Int;
             String nisn = tblDataSiswa.getValueAt(selectedRow, 3).toString();
             String jenisKelamin = tblDataSiswa.getValueAt(selectedRow, 4).toString();
             String kelas = tblDataSiswa.getValueAt(selectedRow, 5).toString();
-
+            
+            int nmrJK = 2;
+            if(jenisKelamin.equals("Laki-Laki")){
+                nmrJK = 1;
+            }
+            
             // Tampilkan ke form
             tfNama.setText(nama);
             tfAlamat.setText(alamat);
             tfNisn.setText(nisn);
-            cbJenisKelamin.setSelectedIndex(Integer.parseInt(jenisKelamin) - 1);
+            cbJenisKelamin.setSelectedIndex(nmrJK - 1);
             tfKelas.setText(kelas);
 
             // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah

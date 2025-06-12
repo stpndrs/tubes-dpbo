@@ -27,25 +27,7 @@ public class DataInstansi extends javax.swing.JFrame {
         super("Data Siswa");
             initComponents();
             controller = new InstansiController(); // menghubungkan ke Controller
-//            tblDataInstansi.getSelectionModel().addListSelectionListener(e -> {
-//                if (!e.getValueIsAdjusting() && tblDataInstansi.getSelectedRow() != -1) {
-//                    int row = tblDataInstansi.getSelectedRow();
-//                    
-//                    tfNama.setText(tblDataInstansi.getValueAt(row, 1).toString());
-//                    tfAlamat.setText(tblDataInstansi.getValueAt(row, 2).toString());
-//                    tfTelepone.setText(tblDataInstansi.getValueAt(row, 3).toString());
-//                    tfSisaKuota.setText(tblDataInstansi.getValueAt(row, 4).toString());
-//
-//                    // Nonaktifkan tombol Tambah
-//                    bTambah.setEnabled(false);
-//
-//                    // Aktifkan tombol Edit dan Hapus
-//                    bEdit.setEnabled(true);
-//                    bCancle.setEnabled(true);
-//                }
-//            });
-
-            // Menyembunyikan kolom pertama (indeks 0)
+            
             tblDataInstansi.getColumnModel().getColumn(0).setMinWidth(0);
             tblDataInstansi.getColumnModel().getColumn(0).setMaxWidth(0);
             tblDataInstansi.getColumnModel().getColumn(0).setWidth(0);
@@ -70,8 +52,9 @@ public class DataInstansi extends javax.swing.JFrame {
                 String alamat = rs.getString("alamat");
                 String telepon = rs.getString("telepon");
                 int kuota = rs.getInt("kuota");
+                String pembimbing_instansi = rs.getString("pembimbing_instansi");
 
-                model.addRow(new Object[]{id, nama, alamat, telepon, kuota});
+                model.addRow(new Object[]{id, nama, alamat, telepon, kuota, pembimbing_instansi});
             }
 
             rs.close();
@@ -117,6 +100,8 @@ public class DataInstansi extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         tfSisaKuota = new javax.swing.JTextField();
         tfTelepone = new javax.swing.JTextField();
+        tfPembimbingInstansi = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDataInstansi = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -155,39 +140,45 @@ public class DataInstansi extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Telepon :");
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setText("Pembimbing :");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(65, 65, 65))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addComponent(bCancle)
+                        .addGap(18, 18, 18)
+                        .addComponent(bSimpan))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(65, 65, 65))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(47, 47, 47)))))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfNama, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                    .addComponent(tfAlamat)
-                    .addComponent(tfSisaKuota)
-                    .addComponent(tfTelepone))
-                .addContainerGap(26, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(bCancle)
-                .addGap(18, 18, 18)
-                .addComponent(bSimpan)
-                .addGap(31, 31, 31))
+                                .addContainerGap()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(47, 47, 47))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)))))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfNama, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addComponent(tfAlamat)
+                            .addComponent(tfSisaKuota)
+                            .addComponent(tfTelepone)
+                            .addComponent(tfPembimbingInstansi))))
+                .addGap(26, 26, 26))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -210,28 +201,32 @@ public class DataInstansi extends javax.swing.JFrame {
                     .addComponent(tfSisaKuota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bCancle)
-                    .addComponent(bSimpan))
+                    .addComponent(tfPembimbingInstansi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(39, 39, 39)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bSimpan)
+                    .addComponent(bCancle))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tblDataInstansi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "id", "Nama", "Alamat", "Telepon", "sisa kuota"
+                "id", "Nama", "Alamat", "Telepon", "sisa kuota", "pembimbing_instansi"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true
+                false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -327,9 +322,10 @@ public class DataInstansi extends javax.swing.JFrame {
         String alamat = tfAlamat.getText();
         String telepon = tfTelepone.getText();
         int kuota = Integer.parseInt(tfSisaKuota.getText());
+        String pembimbing_instansi = tfPembimbingInstansi.getText();
 
         //Model
-        Instansi instansiEdit = new Instansi(kuota, nama, alamat, telepon);
+        Instansi instansiEdit = new Instansi(kuota, nama, alamat, telepon, pembimbing_instansi);
         instansiEdit.setId(id);
         
         //Controller
@@ -353,12 +349,14 @@ public class DataInstansi extends javax.swing.JFrame {
         String alamat = tblDataInstansi.getValueAt(selectedRow, 2).toString();
         String telepon = tblDataInstansi.getValueAt(selectedRow, 3).toString();
         String kuota = tblDataInstansi.getValueAt(selectedRow, 4).toString();
+        String pembimbing_isntansi = tblDataInstansi.getValueAt(selectedRow, 5).toString();
 
         // Tampilkan ke form
         tfNama.setText(nama);
         tfAlamat.setText(alamat);
         tfTelepone.setText(telepon);
         tfSisaKuota.setText(kuota);
+        tfPembimbingInstansi.setText(pembimbing_isntansi);
 
         // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
         bSimpan.setVisible(true);
@@ -376,6 +374,7 @@ public class DataInstansi extends javax.swing.JFrame {
         String nama = tfNama.getText();
         String alamat = tfAlamat.getText();
         String telepon = tfTelepone.getText();
+        String pembimbing_instansi = tfAlamat.getText();
 
         // Validasi awal
         if (nama.isEmpty() || alamat.isEmpty() || telepon.isEmpty()) {
@@ -403,7 +402,7 @@ public class DataInstansi extends javax.swing.JFrame {
             //  Jika OK ditekan
 
             // MODEL
-            Instansi instansiBaru = new Instansi(kuota, nama, alamat, telepon);
+            Instansi instansiBaru = new Instansi(kuota, nama, alamat, telepon, pembimbing_instansi);
 
             // CONTROLLER
             InstansiController.tambahInstansi(instansiBaru);
@@ -469,12 +468,14 @@ public class DataInstansi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblDataInstansi;
     private javax.swing.JTextField tfAlamat;
     private javax.swing.JTextField tfNama;
+    private javax.swing.JTextField tfPembimbingInstansi;
     private javax.swing.JTextField tfSisaKuota;
     private javax.swing.JTextField tfTelepone;
     // End of variables declaration//GEN-END:variables

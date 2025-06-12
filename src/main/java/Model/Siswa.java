@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Siswa{
     private int id, jenis_kelamin;
     private String nama, alamat, nisn, kelas;
-    private User user_id;
+    private int user_id;
 
     public Siswa(int jenis_kelamin, String nama, String alamat, String nisn, String kelas) {
         this.jenis_kelamin = jenis_kelamin;
@@ -23,6 +23,14 @@ public class Siswa{
     
     public Siswa(){
         
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public int getId() {
@@ -67,14 +75,6 @@ public class Siswa{
 
     public void setKelas(String kelas) {
         this.kelas = kelas;
-    }
-
-    public User getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(User user_id) {
-        this.user_id = user_id;
     }
 
     public void setId(int siswaId) {

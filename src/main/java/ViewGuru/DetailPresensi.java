@@ -19,7 +19,7 @@ import scala.Int;
  */
 public class DetailPresensi extends javax.swing.JFrame {
 
-    private PresensiController controller;
+    private PresensiController controller; 
     private static int SiswaId = 0;
     
     /**

@@ -14,8 +14,9 @@ public class InputEditInstansi {
         String alamat = Util.inputString("Alamat baru: ");
         String telpon = Util.inputString("Telpon baru: ");
         int kouta = Util.inputInt("Kouta baru: ");
+        String pembimbing_instansi = Util.inputString("Masukkan pembimbing: ");
 
-        Instansi instansi = new Instansi(kouta, nama, alamat, telpon);
+        Instansi instansi = new Instansi(kouta, nama, alamat, telpon, pembimbing_instansi);
         instansi.setId(id);
         return instansi;
     }

@@ -36,29 +36,52 @@ public class MonitoringController {
             System.err.println("Gagal menyimpan monitoring: " + e.getMessage());
         }
     }
-    
+
     public void editMonitoring(Monitoring monitoringBaru) {
-    String query = "UPDATE monitoring SET siswa_id = ?, guru_id = ?, instansi_id = ? WHERE id = ?";
+        String query = "UPDATE monitoring SET siswa_id = ?, guru_id = ?, instansi_id = ? WHERE id = ?";
 
-    try {
-        PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
-        stmt.setInt(1, monitoringBaru.getSiswa_id());
-        stmt.setInt(2, monitoringBaru.getGuru_id());
-        stmt.setInt(3, monitoringBaru.getIsntansi_id());
-        stmt.setInt(4, monitoringBaru.getId());
+        try {
+            PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
+            stmt.setInt(1, monitoringBaru.getSiswa_id());
+            stmt.setInt(2, monitoringBaru.getGuru_id());
+            stmt.setInt(3, monitoringBaru.getIsntansi_id());
+            stmt.setInt(4, monitoringBaru.getId());
 
-        int rowsUpdated = stmt.executeUpdate();
-        if (rowsUpdated > 0) {
-            System.out.println("Data monitoring berhasil diperbarui.");
-        } else {
-            System.out.println("Monitoring dengan ID tersebut tidak ditemukan.");
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Data monitoring berhasil diperbarui.");
+            } else {
+                System.out.println("Monitoring dengan ID tersebut tidak ditemukan.");
+            }
+
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println("Gagal memperbarui monitoring: " + e.getMessage());
         }
-
-        stmt.close();
-    } catch (SQLException e) {
-        System.err.println("Gagal memperbarui monitoring: " + e.getMessage());
     }
-}
+
+    public void setTanggalMonitoring(Monitoring monitoringBaru) {
+        String query = "UPDATE monitoring SET tanggal_mulai = ?, tanggal_selesai = ? WHERE id = ?";
+        
+        try {
+            PreparedStatement stmt = DBConnection.getConnection().prepareStatement(query);
+            stmt.setString(1, monitoringBaru.getMulai());
+            stmt.setString(2, monitoringBaru.getSelesai());
+            stmt.setInt(3, monitoringBaru.getId());
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Data monitoring berhasil diperbarui.");
+            } else {
+                System.out.println("Monitoring dengan ID tersebut tidak ditemukan.");
+            }
+
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println("Gagal memperbarui monitoring: " + e.getMessage());
+        }
+    }
+
     public String getNamaSiswaById(int id) {
         String nama = null;
         try {
@@ -77,7 +100,7 @@ public class MonitoringController {
         }
         return nama;
     }
-    
+
     public String getNamaGuruById(int id) {
         String nama = null;
         try {
@@ -96,7 +119,7 @@ public class MonitoringController {
         }
         return nama;
     }
-    
+
     public String getNamaInstansiById(int id) {
         String nama = null;
         try {
@@ -115,7 +138,7 @@ public class MonitoringController {
         }
         return nama;
     }
-    
+
     public Integer getIdSiswaByMonitoringId(int idMonitoring) {
         Integer idSiswa = null;
         try {
@@ -134,7 +157,7 @@ public class MonitoringController {
         }
         return idSiswa;
     }
-    
+
     public Integer getIdGuruByMonitoringId(int idMonitoring) {
         Integer idGuru = null;
         try {
@@ -153,7 +176,7 @@ public class MonitoringController {
         }
         return idGuru;
     }
-    
+
     public Integer getIdInstansiByMonitoringId(int idMonitoring) {
         Integer idInstansi = null;
         try {
@@ -172,12 +195,12 @@ public class MonitoringController {
         }
         return idInstansi;
     }
-    
+
     //ADMIN
     public static void updateStatusAdmin(int idMonitoring, int statusBaru) {
         String updateQuery = "UPDATE monitoring SET status = ? WHERE id = ?";
-        String kuotaQuery = "UPDATE instansi SET kuota = kuota - 1 WHERE id = (" +
-                            "SELECT instansi_id FROM monitoring WHERE id = ?) AND kuota > 0";
+        String kuotaQuery = "UPDATE instansi SET kuota = kuota - 1 WHERE id = ("
+                + "SELECT instansi_id FROM monitoring WHERE id = ?) AND kuota > 0";
 
         try {
             PreparedStatement stmtUpdate = DBConnection.getConnection().prepareStatement(updateQuery);
@@ -214,12 +237,10 @@ public class MonitoringController {
             System.err.println("Gagal mengubah status: " + e.getMessage());
         }
     }
-    
-    
+
     public static int getInstansiIdByMonitoringId(int monitoringId) {
         String query = "SELECT instansi_id FROM monitoring WHERE id = ?";
-        try (var conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (var conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, monitoringId);
             ResultSet rs = stmt.executeQuery();
@@ -233,12 +254,11 @@ public class MonitoringController {
         }
         return -1;
     }
-    
+
     public static Integer getIdSiswaByNisn(String nisn) {
         String sql = "SELECT id FROM siswa WHERE nisn = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nisn);
             ResultSet rs = stmt.executeQuery();
