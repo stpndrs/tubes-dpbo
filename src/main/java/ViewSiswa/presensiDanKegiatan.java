@@ -274,6 +274,7 @@ public class presensiDanKegiatan extends javax.swing.JFrame {
 
         PresensiController.masukkanDataPresensi(presensi);
         tampilkanDataKeTabel(Session.getId_siswa());
+        resetForm();
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnKepulanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKepulanganActionPerformed

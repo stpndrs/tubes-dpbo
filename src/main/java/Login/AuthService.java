@@ -19,7 +19,7 @@ public class AuthService {
         ResultSet rs = null;
 
         try {
-            con = (Connection) DBConnection.getConnection(); // Koneksi baru setiap kali login
+            con = (Connection) DBConnection.getConnection(); 
             if (con == null) {
                 System.out.println("Koneksi database null");
                 return false;

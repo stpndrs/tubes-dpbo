@@ -16,6 +16,7 @@ import java.sql.*;
  * @author Pongo
  */
 public class LihatPresensiAdmin extends javax.swing.JFrame {
+
     private static int SiswaId = 0;
     private PresensiController controller;
 
@@ -36,16 +37,12 @@ public class LihatPresensiAdmin extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) tblPresensi.getModel();
         model.setRowCount(0); // Kosongkan tabel sebelum isi ulang
 
-        String sql = "SELECT s.nama AS nama_siswa, s.nisn, i.nama AS nama_instansi, " +
-                     "p.tanggal, p.jam_masuk, p.jam_keluar, p.status, p.keterangan " +
-                     "FROM presensi p " +
-                     "JOIN monitoring m ON p.monitoring_id = m.id " +
-                     "JOIN siswa s ON m.siswa_id = s.id " +
-                     "JOIN instansi i ON m.instansi_id = i.id " +
-                     "WHERE s.id = ?";
+        String sql = "SELECT p.tanggal, p.jam_masuk, p.jam_keluar, p.status, p.keterangan "
+                + "FROM presensi p "
+                + "JOIN monitoring m ON p.monitoring_id = m.id "
+                + "WHERE m.siswa_id = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, siswaId);
             ResultSet rs = stmt.executeQuery();
@@ -56,16 +53,18 @@ public class LihatPresensiAdmin extends javax.swing.JFrame {
                 String jamKeluar = rs.getString("jam_keluar");
                 int nmrStatus = rs.getInt("status");
                 String keterangan = rs.getString("keterangan");
-                
+
                 String status = controller.statusPresensi(nmrStatus);
 
-                if(jamKeluar == null){
+                if (jamKeluar == null || jamKeluar.isEmpty()) {
                     jamKeluar = "-";
                 }
 
-                model.addRow(new Object[]{tanggal, jamMasuk, jamKeluar, status, keterangan});
+                model.addRow(new Object[]{1,tanggal, jamMasuk, jamKeluar, status, keterangan});
             }
-
+            stmt.close();
+            rs.close();
+            conn.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Gagal mengambil data presensi: " + e.getMessage());
         }

@@ -101,6 +101,7 @@ public class DataMonitoring extends javax.swing.JFrame {
         bEdit.setEnabled(true);
         bSimpan.setVisible(false);
         bCancle.setVisible(false);
+        bLihatPresensi.setEnabled(false);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -419,6 +420,7 @@ public class DataMonitoring extends javax.swing.JFrame {
         bSimpan.setVisible(true);
         bCancle.setVisible(true);
         bTambah.setEnabled(false);
+        bLihatPresensi.setEnabled(true);
         
         // Simpan row index yang diedit ke variable tersembunyi
         tblDataMonitoring.setRowSelectionInterval(selectedRow, selectedRow); // tetap seleksi
