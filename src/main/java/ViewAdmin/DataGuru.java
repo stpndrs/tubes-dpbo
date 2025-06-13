@@ -396,7 +396,7 @@ public class DataGuru extends javax.swing.JFrame {
         tfNama.setText(nama);
         tfAlamat.setText(alamat);
         tfNip.setText(nip);
-        cbJenisKelamin.setSelectedItem(nmrJK - 1);
+        cbJenisKelamin.setSelectedIndex(nmrJK - 1);
 
         // Tampilkan tombol simpan & cancel & sembuyikan tombol tambah
         bSimpan.setVisible(true);

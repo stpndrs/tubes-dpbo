@@ -35,11 +35,13 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
         model.setRowCount(0); // Kosongkan tabel sebelum isi ulang
 
         String sql = "SELECT s.nama AS nama_siswa, s.nisn, i.nama AS nama_instansi, " +
+                     "g.nama AS nama_guru, " + // Tambahkan nama guru
                      "p.tanggal, p.jam_masuk, p.jam_keluar, p.status, p.keterangan " +
                      "FROM presensi p " +
                      "JOIN monitoring m ON p.monitoring_id = m.id " +
                      "JOIN siswa s ON m.siswa_id = s.id " +
                      "JOIN instansi i ON m.instansi_id = i.id " +
+                     "JOIN guru g ON m.guru_id = g.id " + // JOIN ke tabel guru
                      "WHERE s.id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -55,9 +57,12 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
                 int nmrStatus = rs.getInt("status");
                 String keterangan = rs.getString("keterangan");
                 
-                tfNama.setText(rs.getString("nama_siswa"));
-                tfNisn.setText(rs.getString("nisn"));
-                tfGuru.setText(rs.getString("nama_instansi"));
+//                tfNama.setText(rs.getString("nama_siswa"));
+                lNama.setText(rs.getString("nama_siswa"));
+//                tfNisn.setText(rs.getString("nisn"));
+                lGuru.setText(rs.getString("nama_guru"));
+//                tfGuru.setText(rs.getString("nama_instansi"));
+                lNizn.setText(rs.getString("nisn"));
                 
                 String status =controller.statusPresensi(nmrStatus);
 
@@ -83,15 +88,15 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel4 = new javax.swing.JLabel();
-        tfNama = new javax.swing.JTextField();
-        tfNisn = new javax.swing.JTextField();
-        tfGuru = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPresensi = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         bExit = new javax.swing.JButton();
+        lNama = new javax.swing.JLabel();
+        lGuru = new javax.swing.JLabel();
+        lNizn = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -142,6 +147,12 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
             }
         });
 
+        lNama.setText("Nama");
+
+        lGuru.setText("Nama");
+
+        lNizn.setText("NISN");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,11 +168,11 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel4))
-                                .addGap(42, 42, 42)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tfGuru, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfNisn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfNama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lNizn, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lNama, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(348, 348, 348)
                         .addComponent(bExit)
                         .addGap(11, 11, 11))
@@ -171,22 +182,22 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(12, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bExit, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(tfNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lNama))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(tfNisn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lNizn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(tfGuru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lGuru))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -245,9 +256,9 @@ public class DetailPerensiDanKegiatan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lGuru;
+    private javax.swing.JLabel lNama;
+    private javax.swing.JLabel lNizn;
     private javax.swing.JTable tblPresensi;
-    private javax.swing.JTextField tfGuru;
-    private javax.swing.JTextField tfNama;
-    private javax.swing.JTextField tfNisn;
     // End of variables declaration//GEN-END:variables
 }

@@ -64,13 +64,15 @@ public class DataMonitoring extends javax.swing.JFrame {
                 String nama = controller.getNamaSiswaById(id_siswa);
                 String guru = controller.getNamaGuruById(id_guru);
                 String instansi = controller.getNamaInstansiById(id_instansi);
+                
+                String status_convert = Controller.MonitoringController.converStatus(status);
                 if(mulai == null){
                     mulai = "-";
                 }
                 if(selesai == null){
                     selesai = "-";
                 }
-                model.addRow(new Object[]{id_monitoring, nama, mulai, selesai, status, instansi, guru});
+                model.addRow(new Object[]{id_monitoring, nama, mulai, selesai, status_convert, instansi, guru});
             }
 
             rs.close();

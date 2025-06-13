@@ -275,4 +275,18 @@ public class MonitoringController {
             return null;
         }
     }
+    
+    public static String converStatus(int status){
+        if(status == 1){
+            return "pengajuan";
+        }
+        else if(status == 2){
+            return "diterima";
+        } else if(status == 3){
+            return "pelaksanaan";
+        } else if(status == 4){
+            return "selesai";
+        }
+        return "di tolak";
+    }
 }

@@ -35,11 +35,11 @@
                                   <Component id="jLabel3" min="-2" pref="59" max="-2" attributes="0"/>
                                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="tfGuru" alignment="0" min="-2" pref="163" max="-2" attributes="0"/>
-                                  <Component id="tfNisn" alignment="0" min="-2" pref="163" max="-2" attributes="0"/>
-                                  <Component id="tfNama" alignment="0" min="-2" pref="163" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lGuru" min="-2" pref="142" max="-2" attributes="0"/>
+                                  <Component id="lNizn" min="-2" pref="142" max="-2" attributes="0"/>
+                                  <Component id="lNama" min="-2" pref="142" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -56,7 +56,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="12" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel1" alignment="1" min="-2" pref="38" max="-2" attributes="0"/>
                   <Component id="bExit" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -64,17 +64,17 @@
               <EmptySpace min="35" pref="35" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfNama" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lNama" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfNisn" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lNizn" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfGuru" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lGuru" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
@@ -91,12 +91,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Guru : "/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="tfNama">
-    </Component>
-    <Component class="javax.swing.JTextField" name="tfNisn">
-    </Component>
-    <Component class="javax.swing.JTextField" name="tfGuru">
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
@@ -151,6 +145,21 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bExitActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lNama">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nama"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lGuru">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nama"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lNizn">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="NISN"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

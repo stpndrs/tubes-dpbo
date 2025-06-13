@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package ViewSiswa;
-
+import Controller.PresensiController;
 import Session.Session;
 import ViewLogin.LoginView;
 /**
@@ -18,6 +18,11 @@ public class DashBoardSiswa extends javax.swing.JFrame {
     public DashBoardSiswa() {
         initComponents();
         tfDashboardSiswa.setText("Dashboard Siswa " + Session.getNama());
+        
+        boolean cek = Controller.PresensiController.isMonitoringStatusNotTiga(Session.getId_siswa());
+        if(!cek){
+            jButton1.setEnabled(false);
+        }
     }
 
     /**

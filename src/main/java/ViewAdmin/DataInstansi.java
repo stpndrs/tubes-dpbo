@@ -70,6 +70,7 @@ public class DataInstansi extends javax.swing.JFrame {
         tfAlamat.setText("");
         tfTelepone.setText("");
         tfSisaKuota.setText("");
+        tfPembimbingInstansi.setText("");
 
         tblDataInstansi.clearSelection(); // hapus seleksi di tabel
 

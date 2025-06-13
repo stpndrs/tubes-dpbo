@@ -34,6 +34,7 @@ public class presensiDanKegiatan extends javax.swing.JFrame {
         initComponents();
         
         tampilkanDataKeTabel(Session.getId_siswa());
+        jButton1.setEnabled(false);
         
         tblPresensi.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -42,6 +43,7 @@ public class presensiDanKegiatan extends javax.swing.JFrame {
                     // Baris dipilih -> matikan tombol
                     btnTambah.setEnabled(false);
                     btnKepulangan.setEnabled(true);
+                    jButton1.setEnabled(true);
                 } else {
                     // Tidak ada baris yang dipilih -> aktifkan kembali
                     btnTambah.setEnabled(true);
